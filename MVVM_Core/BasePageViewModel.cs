@@ -9,16 +9,16 @@ namespace MVVM_Core
 {
     public abstract class BasePageViewModel: BaseViewModel
     {
-        private readonly PageService pageservice;
+        protected readonly PageService pageservice;
 
         public abstract int PoolIndex { get; }
 
-        public virtual void Back()
+        protected virtual void Back()
         {
             pageservice.Back(PoolIndex, DisappearAndToSlideAnim.ToRight);
         }
 
-        public virtual void Next()
+        protected virtual void Next()
         {
 
         }

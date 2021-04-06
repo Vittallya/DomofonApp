@@ -69,7 +69,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllDbContext.cs" />
-    <Compile Include="Models\TestModel.cs" />
+    <Compile Include="Dto\OrderDto.cs" />
+    <Compile Include="Dto\ProductDto.cs" />
+    <Compile Include="Migrations\202104022011087_InitialCreate.cs" />
+    <Compile Include="Migrations\202104022011087_InitialCreate.designer.cs">
+      <DependentUpon>202104022011087_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104051609243_start.cs" />
+    <Compile Include="Migrations\202104051609243_start.designer.cs">
+      <DependentUpon>202104051609243_start.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\CommonSale.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\PersonalSale.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Profile.cs" />
+    <Compile Include="Models\Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,8 +106,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Dto\" />
     <Folder Include="Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202104022011087_InitialCreate.resx">
+      <DependentUpon>202104022011087_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104051609243_start.resx">
+      <DependentUpon>202104051609243_start.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

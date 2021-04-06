@@ -18,6 +18,7 @@ namespace Main
 
         public  MainViewModel MainViewModel => Services.GetRequiredService<MainViewModel>();
         public  LoginViewModel LoginViewModel => Services.GetRequiredService<LoginViewModel>();
+        public  CatalogViewModel CatalogViewModel => Services.GetRequiredService<CatalogViewModel>();
     }
 }
 

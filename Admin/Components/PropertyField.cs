@@ -12,5 +12,7 @@ namespace Admin.Components
 
         public string BindingPath { get; }
 
+
+
     }
 }

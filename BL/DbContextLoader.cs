@@ -20,13 +20,13 @@ namespace BL
         public string MessageDetail { get; private set; }
 
 
-        public async Task<bool> LoadAsync()
+        public async Task<bool> LoadAsync<T>() where T: class
         {
             Thread thread = new Thread(() =>
             {
                 try
                 {
-                    _dbContext.Set<object>().Load();
+                    _dbContext.Set<T>().Load();
                     _loaded = true;
                 }
                 catch(Exception ex)

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DAL;
 using System;
 using Main.Services;
+using DAL.Models;
 
 namespace Main.ViewModels
 {
@@ -50,12 +51,12 @@ namespace Main.ViewModels
             pipeHanlder.Init();
             pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
 
-            IsLoaded = await contextLoader.LoadAsync();
+            IsLoaded = await contextLoader.LoadAsync<Product>();
             IsLoadingAnimation = false;
 
             if (IsLoaded)
             {
-                //ЗАГРУЗКА КАКОЙ-ТО СТРАНИЦЫ
+                pageService.ChangePage<Pages.CatalogPage>(Rules.Pages.MainPool, defaultAnim);
             }
             else
             {

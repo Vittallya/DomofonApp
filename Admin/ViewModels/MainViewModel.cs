@@ -43,38 +43,37 @@ namespace Admin.ViewModels
 
         public ICommand AutosCommand => new Command(x =>
         {
-            Locator.SetItemsViewModel<AutosViewModel>();
+            //Locator.SetItemsViewModel<AutosViewModel>();
             pageService.ClearHistoryByPool(1);
             pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
         });
         public ICommand FinesCommand => new Command(x =>
         {
-            Locator.SetItemsViewModel<FinesViewModel>();
+            //Locator.SetItemsViewModel<FinesViewModel>();
             pageService.ClearHistoryByPool(1);
             pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
         });
 
         public ICommand ParkingCommand => new Command(x =>
         {
-            Locator.SetItemsViewModel<ParkingViewModel>();
+            //Locator.SetItemsViewModel<ParkingViewModel>();
             pageService.ClearHistoryByPool(1);
             pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
         });
         public ICommand EvacCommand => new Command(x =>
         {
-            Locator.SetItemsViewModel<EvacuationsViewModel>();
+            //Locator.SetItemsViewModel<EvacuationsViewModel>();
             pageService.ClearHistoryByPool(1);
             pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
         });
         public ICommand DeclarationCommand => new Command(x =>
         {
-            Locator.SetItemsViewModel<DeclarationsViewModel>();
+            //Locator.SetItemsViewModel<DeclarationsViewModel>();
             pageService.ClearHistoryByPool(1);
             pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
         });
 
 
-        public ObservableCollection<Auto> Autos { get; set; }
         public override Page CurrentPage { get; set; }
 
         async Task Update(Events.UpdatePipe updatePipe)
@@ -89,7 +88,7 @@ namespace Admin.ViewModels
             serverPipeHandler.Init();
             try
             {
-                await loader.LoadAsync();
+                await loader.LoadAsync<Client>();
                 LoadingContext = false;
             }
             catch(Exception ex)

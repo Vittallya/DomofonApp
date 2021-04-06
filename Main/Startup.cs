@@ -18,6 +18,9 @@ namespace Main
             services.AddTransient<ILoginService, LoginService>();
             services.AddSingleton<ClientPipeHanlder>();
             services.AddTransient<Services.UpdateHandlerService>();
+            services.AddSingleton<BL.OrderService>();
+            services.AddSingleton<BL.CatalogService>();
+            services.AddSingleton<BL.BasketService>();
         }
     }
 }

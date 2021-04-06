@@ -29,6 +29,8 @@ namespace Admin.ViewModels
         PropertyInfo idProp = typeof(T).GetProperty("Id");
 
 
+        protected bool isAutoGenerate = false;
+
         public virtual async Task<bool> CheckBeforeAdd(T item)
         {
             return true;
@@ -39,6 +41,11 @@ namespace Admin.ViewModels
 
         }
         protected virtual async Task OnAdd()
+        {
+
+        }
+
+        protected virtual void GenerateBindingList()
         {
 
         }
@@ -68,6 +75,11 @@ namespace Admin.ViewModels
                 fieldsGenerator.Clear();
             }
             await LoadItems();
+
+            if (isAutoGenerate)
+            {
+                GenerateBindingList();
+            }
 
         }
 
