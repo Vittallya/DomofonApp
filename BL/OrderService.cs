@@ -16,8 +16,8 @@ namespace BL
     {
         private readonly AllDbContext dbContext;
 
-        Order _currentOrder;
-        Product _currentProduct;
+        OrderDto _currentOrder;
+        List<OrderedProductDto> _orderedProducts;
 
         public bool IsEdit { get; private set; }
         public bool IsStarted { get; private set; }
@@ -27,7 +27,7 @@ namespace BL
             IsEdit = false;
             IsStarted = false;
             _currentOrder = null;
-            _currentProduct = null;
+            _orderedProducts = null;
         }
 
         public OrderService(AllDbContext dbContext)
@@ -35,39 +35,29 @@ namespace BL
             this.dbContext = dbContext;
         }
 
+        public void StartOrder(IEnumerable<OrderedProductDto> orderedProducts)
+        {
+            IsEdit = false;        
+            _orderedProducts = orderedProducts.ToList();
+            _currentOrder = new OrderDto();
+        }
+
+        
+
+        
+
         public OrderDto GetOrder()
         {
-            Mapper mapper = new Mapper(new MapperConfiguration(x => x.CreateMap<Order, OrderDto>()));
+            Mapper mapper = new Mapper(new MapperConfiguration(x => x.CreateMap<OrderDto, OrderDto>()));
 
-            var dto = mapper.Map<Order, OrderDto>(_currentOrder);
-            return dto;
+            var copy = mapper.Map<OrderDto>(_currentOrder);
+            return copy;
         }
 
-        public async Task BeginEditing(int orderId)
+        public void SetupOrder()
         {
-            IsEdit = true;
-            _currentOrder = await dbContext.Orders.FindAsync(orderId);
+
         }
-        public async Task BeginNewOrder(int productId)
-        {
-            _currentProduct = await dbContext.Products.FindAsync(productId);
-            IsEdit = false;
-
-            _currentOrder = new Order { ProductId = productId };
-        }
-
-        public async Task<double> GetMaxCommonSale(int productId, int count)
-        {
-            await dbContext.CommonSales.LoadAsync();
-
-            var sale = await dbContext.CommonSales.
-                Where(x => x.ProductId == productId && x.StartCount <= count).
-                OrderByDescending(x => x.StartCount).
-                FirstOrDefaultAsync();
-
-            return sale?.SaleValue ?? 0;
-        }
-
 
         public async Task<IEnumerable<OrderDto>> GetAllOrders(int clientId)
         {

@@ -58,5 +58,25 @@ namespace BL
             return products;
         }
 
+        public async Task<IEnumerable<ProductDto>> GetProductsIncludeBasketAsync(IEnumerable<ProductDto> dtos, string name = null)
+        {
+            var collection = (await GetProductsAsync(name)).Except(dtos, new IdComparer());
+            return collection.Union(dtos);
+        }
+
     }
+
+    class IdComparer : IEqualityComparer<ProductDto>
+    {
+        public bool Equals(ProductDto x, ProductDto y)
+        {
+            return x.Id == y.Id;
+        }
+
+        public int GetHashCode(ProductDto obj)
+        {
+            return obj.Id;
+        }
+    }
+
 }

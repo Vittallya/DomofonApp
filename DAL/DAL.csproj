@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="AllDbContext.cs" />
     <Compile Include="Dto\OrderDto.cs" />
+    <Compile Include="Dto\OrderedProductDto.cs" />
     <Compile Include="Dto\ProductDto.cs" />
     <Compile Include="Migrations\202104022011087_InitialCreate.cs" />
     <Compile Include="Migrations\202104022011087_InitialCreate.designer.cs">
@@ -79,10 +80,19 @@
     <Compile Include="Migrations\202104051609243_start.designer.cs">
       <DependentUpon>202104051609243_start.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104061540599_ManyProductsToManyOrders.cs" />
+    <Compile Include="Migrations\202104061540599_ManyProductsToManyOrders.designer.cs">
+      <DependentUpon>202104061540599_ManyProductsToManyOrders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.cs" />
+    <Compile Include="Migrations\202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.designer.cs">
+      <DependentUpon>202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\CommonSale.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderedProduct.cs" />
     <Compile Include="Models\PersonalSale.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Profile.cs" />
@@ -114,6 +124,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104051609243_start.resx">
       <DependentUpon>202104051609243_start.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104061540599_ManyProductsToManyOrders.resx">
+      <DependentUpon>202104061540599_ManyProductsToManyOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.resx">
+      <DependentUpon>202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

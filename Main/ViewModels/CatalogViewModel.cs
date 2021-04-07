@@ -34,16 +34,14 @@ namespace Main.ViewModels
 
         public ICommand AddToBasket => new Command(x =>
         {
-            if(x is ProductDto product)
+            if (x is ProductDto product)
             {
                 int i = Products.IndexOf(product);
                 Products[i] = basketService.AddToBasket(product);
-                OnPropertyChanged("BasketCount");
+                OnPropertyChanged(nameof(BasketCount));
             }
-            
-        });
 
-        List<ProductDto> list = new List<ProductDto>();
+        });
 
         public int BasketCount
         {
@@ -63,29 +61,36 @@ namespace Main.ViewModels
             {
                 int i = Products.IndexOf(product);
                 Products[i] = basketService.RemoveFromBasket(product);
-                OnPropertyChanged("BasketCount");
+                OnPropertyChanged(nameof(BasketCount));
 
             }
 
         });
 
-
-        private void Products_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        public ICommand ToBasket => new Command(x =>
         {
-            Console.WriteLine("Коллекция изменилась");
-        }
+            pageservice.ChangePage<Pages.BasketPage>(DisappearAnimation.Default);
+        });
 
         async void Init()
         {
             IsLoading = true;
             await Reload();
-            Products.CollectionChanged += Products_CollectionChanged;
         }
 
         async Task Reload()
         {
-            Products = new ObservableCollection<ProductDto>(await catalogService.GetProductsAsync());
+            if (basketService.BasketCount > 0)
+            {
+                Products = new ObservableCollection<ProductDto>(await catalogService.GetProductsIncludeBasketAsync(basketService.GetCatalog()));
+            }
+            else
+            {
+
+                Products = new ObservableCollection<ProductDto>(await catalogService.GetProductsAsync());
+            }
             IsLoading = false;
+            OnPropertyChanged(nameof(BasketCount));
         }
 
 
