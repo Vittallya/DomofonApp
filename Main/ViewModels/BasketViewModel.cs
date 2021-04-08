@@ -13,31 +13,81 @@ namespace Main.ViewModels
     public class BasketViewModel : BasePageViewModel
     {
         private readonly BasketService basketService;
+        private readonly CatalogService catalogService;
+        private readonly ServicesService servicesService;
         private readonly Timer timer = new Timer(5, 100);
 
-        protected override void Back()
+        public ObservableCollection<OrderedProductDto> OrderedProducts { get; set; }
+
+        public ObservableCollection<ServiceDto> IncludedServices { get; set; }
+
+        public ObservableCollection<ServiceDto> NotIncludedServices { get; set; }
+
+        public bool IsServicesIncluded => IncludedServices != null && IncludedServices.Count > 0;
+
+        public bool IsPromtVisible { get; set; }
+
+
+        protected override async void Back()
         {
+            await Update();
             pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
-        public BasketViewModel(PageService pageservice, BasketService basketService) : base(pageservice)
+        public BasketViewModel(PageService pageservice, BasketService basketService, CatalogService catalogService, ServicesService servicesService) : base(pageservice)
         {
             this.basketService = basketService;
+            this.catalogService = catalogService;
+            this.servicesService = servicesService;
             Init();
         }
 
+        public ICommand AddService => new CommandAsync(async x =>
+        {
+            if(x is ServiceDto dto)
+            {
+                NotIncludedServices.Remove(dto);
+                IncludedServices.Add(dto);
+                await Calculate();
+                OnPropertyChanged(nameof(IsServicesIncluded));
+            }
+            IsPromtVisible = false;
+        }); 
+        public ICommand RemoveService => new CommandAsync(async x =>
+        {
+            if(x is ServiceDto dto)
+            {
+                IncludedServices.Remove(dto);
+                NotIncludedServices.Add(dto);
+                await Calculate();
+                OnPropertyChanged(nameof(IsServicesIncluded));
+            }
+        });
+
+        public ICommand ClosePrompt => new Command(x =>
+        {
+            IsPromtVisible = false;
+        });
+        public ICommand OpenPrompt => new Command(x =>
+        {
+            IsPromtVisible = true;
+        });
 
         async Task Update()
         {
             await Calculate();
             await basketService.SetupFilledProducts(OrderedProducts);
+            await servicesService.SetupUsedServices(IncludedServices);
         }
 
-        public ObservableCollection<OrderedProductDto> OrderedProducts { get; set; }
 
         async Task Reload()
         {
+            await servicesService.ReloadAsync();
+
             OrderedProducts = new ObservableCollection<OrderedProductDto>(basketService.GetOrderProducts());
+            NotIncludedServices = new ObservableCollection<ServiceDto>(servicesService.GetNotUsedServices());
+            IncludedServices = new ObservableCollection<ServiceDto>(servicesService.GetUsedServices());
             await Calculate();
         }
 
@@ -70,6 +120,12 @@ namespace Main.ViewModels
                 CommonSaleValute += saleValute;
                 FinalCost += inst.Cost - saleValute;
                 CommonCost += inst.Cost;
+            }
+
+            foreach(var s in IncludedServices)
+            {
+                CommonCost += s.Cost;
+                FinalCost += s.Cost;
             }
         }
 

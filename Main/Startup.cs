@@ -21,6 +21,7 @@ namespace Main
             services.AddSingleton<BL.OrderService>();
             services.AddSingleton<BL.CatalogService>();
             services.AddSingleton<BL.BasketService>();
+            services.AddSingleton<BL.ServicesService>();
         }
     }
 }

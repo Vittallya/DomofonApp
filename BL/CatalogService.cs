@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DAL;
 using DAL.Dto;
+using DAL.Interfaces;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -37,11 +38,11 @@ namespace BL
                 ToList();
         }
 
-        public ProductDto GetCopy(ProductDto product)
+        public T GetCopy<T>(T product)
         {
-            Mapper mapper = new Mapper(new MapperConfiguration(z => z.CreateMap<ProductDto, ProductDto>()));
+            Mapper mapper = new Mapper(new MapperConfiguration(z => z.CreateMap<T, T>()));
 
-            var instance = mapper.Map<ProductDto>(product);
+            var instance = mapper.Map<T>(product);
             return instance;
         }
 
@@ -60,20 +61,21 @@ namespace BL
 
         public async Task<IEnumerable<ProductDto>> GetProductsIncludeBasketAsync(IEnumerable<ProductDto> dtos, string name = null)
         {
-            var collection = (await GetProductsAsync(name)).Except(dtos, new IdComparer());
+            var collection = (await GetProductsAsync(name)).Except(dtos, new IdComparer()).OfType<ProductDto>();
             return collection.Union(dtos);
         }
 
+        
     }
 
-    class IdComparer : IEqualityComparer<ProductDto>
+    class IdComparer : IEqualityComparer<IDto>
     {
-        public bool Equals(ProductDto x, ProductDto y)
+        public bool Equals(IDto x, IDto y)
         {
             return x.Id == y.Id;
         }
 
-        public int GetHashCode(ProductDto obj)
+        public int GetHashCode(IDto obj)
         {
             return obj.Id;
         }

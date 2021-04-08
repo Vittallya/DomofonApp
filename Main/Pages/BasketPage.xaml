@@ -17,13 +17,16 @@
             <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
+        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="12*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Border 
+        <Border
+            
             Background="White"
             BorderBrush="White"
             CornerRadius="3" 
@@ -35,9 +38,10 @@
             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView SelectedItem="{Binding Selected}" 
                       BorderBrush="{x:Null}"    
+                       TextBlock.FontSize="14"
                       ItemsSource="{Binding OrderedProducts}">
                 <ListView.View>
-                    <GridView >
+                    <GridView>
 
                         <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Product.Name}"/>
                         <GridViewColumn Header="Количество" >
@@ -52,9 +56,10 @@
                                             Margin="5" 
                                             Content="-"/>
 
-                                        <TextBox
-                                            Margin="10 0"
-                                            IsReadOnly="True"
+                                        <TextBlock
+                                            TextAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
                                             Width="50" Text="{Binding Count, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"/>
                                         
                                         
@@ -117,6 +122,81 @@
             </Grid>
         </Border>
         
+        <Border  
+            Margin="0 25"
+            VerticalAlignment="Top"
+            Background="White"
+            BorderBrush="White"
+            CornerRadius="3" 
+            BorderThickness="4"
+                Grid.Column="1"
+                Grid.Row="2" Padding="25 5">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.ColumnSpan="2">
+                    <Button 
+                        Command="{Binding OpenPrompt}"
+                        Margin="0 5" Content="Добавить услугу" Style="{DynamicResource LinkButton}"/>
+                    
+                    <Expander 
+                        Visibility="{Binding IsServicesIncluded, Converter={StaticResource BoolToVis}}"
+                        Margin="0 10">
+                        <Expander.Header>
+                            <TextBlock Text="Услуги" Style="{DynamicResource TextBlock_H3}" />
+                        </Expander.Header>
+                        <ItemsControl BorderBrush="{x:Null}" ItemsSource="{Binding IncludedServices}" Grid.Row="1">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <StackPanel Margin="15 5 0 0" HorizontalAlignment="Left" Orientation="Horizontal">
+                                        <TextBlock Width="250" Text="{Binding Name}" Style="{DynamicResource TextBlock_H3}"/>
+                                        <TextBlock Width="150" HorizontalAlignment="Right" 
+                                               Text="{Binding Cost}" 
+                                               Style="{DynamicResource TextBlock_H3_DemiBold}"/>
+
+
+
+
+                                        <Button     Content="Удалить"
+                                                Style="{DynamicResource LinkButton}"
+                                            Padding="15 2"
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                            Command="{Binding RemoveService}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}, Path=DataContext}"/>
+                                    </StackPanel>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Expander>
+                </StackPanel>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Left">
+
+                    <TextBlock Style="{DynamicResource TextBlock_H3}" Text="Общая стоиомость: "/>
+                    <TextBlock Style="{DynamicResource TextBlock_H3}" Margin="0 5" Text="Общая скидка: "/>
+                    <TextBlock Margin="0 5" FontSize="19"  Style="{DynamicResource TextBlock_H3}" Text="Итоговая стоиомость: "/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" HorizontalAlignment="Right" Grid.Column="1">
+
+                    <TextBlock Style="{DynamicResource TextBlock_H3_DemiBold}" Grid.Column="1" Text="{Binding CommonCost, StringFormat='{}{0} р.'}"/>
+                    <TextBlock Style="{DynamicResource TextBlock_H3_DemiBold}" Margin="0 5" Grid.Column="1" Text="{Binding CommonSaleValute, StringFormat='{}{0} р.'}"/>
+                    <TextBlock Margin="0 5" FontSize="19" Style="{DynamicResource TextBlock_H3_DemiBold}" Grid.Column="1" Text="{Binding FinalCost, StringFormat='{}{0} р.'}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+        
 
         <Button Content="Назад в каталог" 
                 Grid.Row="3"
@@ -125,5 +205,67 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Command="{Binding BackCommand}"/>
+
+        <Rectangle Visibility="{Binding IsPromtVisible, Converter={StaticResource BoolToVis}}" 
+                   Grid.ColumnSpan="3" Grid.RowSpan="4" Fill="#7F000000"/>
+        <Border 
+            Visibility="{Binding IsPromtVisible, Converter={StaticResource BoolToVis}}" 
+            Margin="15 25"
+            VerticalAlignment="Top"
+            Background="White"
+            BorderBrush="White"
+            CornerRadius="3" 
+            BorderThickness="4"
+                Grid.Column="1"
+                Grid.Row="2" Padding="25 5">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Button Content="X" HorizontalAlignment="Right"
+                        Padding="10 5"
+                        Command="{Binding ClosePrompt}"
+                        Style="{DynamicResource ButtonEmpty}"
+                        VerticalAlignment="Top" Margin="-25 -5"/>
+
+                <TextBlock Text="Добавить услугу" 
+                           HorizontalAlignment="Center"
+                           Margin="0 5"
+                           Grid.ColumnSpan="2" Style="{DynamicResource TextBlock_H2}"/>
+
+                
+                <ItemsControl BorderBrush="{x:Null}" ItemsSource="{Binding NotIncludedServices}" Grid.Row="1">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock Width="250" Text="{Binding Name}" Style="{DynamicResource TextBlock_H3}"/>
+                                <TextBlock Width="150" HorizontalAlignment="Right" 
+                                               Text="{Binding Cost}" 
+                                               Style="{DynamicResource TextBlock_H3_DemiBold}"/>
+
+
+
+
+                                <Button     Content="Добавить"
+                                                Style="{DynamicResource LinkButton}"
+                                            Padding="15 2"
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                            Command="{Binding AddService}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}, Path=DataContext}"/>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                
+
+            </Grid>
+        </Border>
     </Grid>
 </Page>

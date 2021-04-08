@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Dto
 {
-    public class ProductDto
+    public class ProductDto: IDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

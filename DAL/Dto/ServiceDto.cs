@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace DAL.Dto
 {
-    public class OrderDto: IDto
+    public class ServiceDto: IDto
     {
         public int Id { get; set; }
-        public int Count { get; set; }
 
-        /// <summary>
-        /// Оптовая скидка
-        /// </summary>
-        public string Address { get; set; }
+        public string Name { get; set; }
+
+        public double Cost { get; set; }
     }
 }

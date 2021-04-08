@@ -12,8 +12,13 @@ namespace BL
 {
     public class BasketService
     {
+        public void Clear()
+        {
+        }
+
         List<OrderedProductDto> orderedProducts = new List<OrderedProductDto>();
         private readonly AllDbContext dbContext;
+
 
         public int BasketCount => orderedProducts.Count;
 

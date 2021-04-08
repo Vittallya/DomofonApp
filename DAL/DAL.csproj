@@ -72,6 +72,8 @@
     <Compile Include="Dto\OrderDto.cs" />
     <Compile Include="Dto\OrderedProductDto.cs" />
     <Compile Include="Dto\ProductDto.cs" />
+    <Compile Include="Dto\ServiceDto.cs" />
+    <Compile Include="Interfaces\IDto.cs" />
     <Compile Include="Migrations\202104022011087_InitialCreate.cs" />
     <Compile Include="Migrations\202104022011087_InitialCreate.designer.cs">
       <DependentUpon>202104022011087_InitialCreate.cs</DependentUpon>
@@ -115,9 +117,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202104022011087_InitialCreate.resx">
       <DependentUpon>202104022011087_InitialCreate.cs</DependentUpon>
