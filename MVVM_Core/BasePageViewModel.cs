@@ -13,9 +13,11 @@ namespace MVVM_Core
 
         public abstract int PoolIndex { get; }
 
+        protected virtual ISliderAnimation BackSlideAnim => DisappearAnimation.Default;
+
         protected virtual void Back()
         {
-            pageservice.Back(PoolIndex, DisappearAndToSlideAnim.ToRight);
+            pageservice.Back(PoolIndex, BackSlideAnim);
         }
 
         protected virtual void Next()

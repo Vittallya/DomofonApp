@@ -34,7 +34,8 @@ namespace Main.ViewModels
         protected override async void Back()
         {
             await Update();
-            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
+            pageservice.ClearHistoryByPool(PoolIndex);
+            pageservice.ChangePage<Pages.CatalogPage>(PoolIndex, DisappearAnimation.Default);
         }
 
         public BasketViewModel(PageService pageservice, BasketService basketService, 
@@ -97,7 +98,7 @@ namespace Main.ViewModels
             }
             else
             {
-                pageservice.ChangePage<Pages.ClientRegisterPage>(DisappearAnimation.Default);
+                pageservice.ChangePage<Pages.ClientRegisterPage>(PoolIndex, DisappearAnimation.Default);
                 eventBus.Subscribe<Events.ClientRegistered, BaseViewModel>(OnRegister);
             }
         }
@@ -124,6 +125,8 @@ namespace Main.ViewModels
             await Reload();
             timer.TimerCompletedAsync += async () => await Update();
         }
+
+        
 
         public OrderedProductDto Selected { get; set; }
 

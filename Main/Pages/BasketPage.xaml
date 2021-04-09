@@ -121,16 +121,18 @@
 
             </Grid>
         </Border>
-        
-        <Border  
+        <ScrollViewer
             Margin="0 25"
             VerticalAlignment="Top"
+            Grid.Column="1"
+            Grid.Row="2"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">
+        <Border  
             Background="White"
             BorderBrush="White"
             CornerRadius="3" 
-            BorderThickness="4"
-                Grid.Column="1"
-                Grid.Row="2" Padding="25 5">
+            BorderThickness="4" Padding="25 5">
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -197,8 +199,8 @@
 
             </Grid>
         </Border>
-        
 
+        </ScrollViewer>
         <Button Content="Назад в каталог" 
                 Grid.Row="3"
                 Grid.Column="1"

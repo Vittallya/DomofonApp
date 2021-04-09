@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Xaml/Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/WpfControlLibrary1;component/Converters.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/LocatorXAML.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/ControlsStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/GeneralStyles.xaml"/>

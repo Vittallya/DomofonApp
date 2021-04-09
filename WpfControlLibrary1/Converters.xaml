@@ -4,6 +4,7 @@
     
     <local:ConverterBoolInvert x:Key="BoolInvert"/>
     <local:ConverterBoolToVisibility x:Key="BoolToVis"/>
-    <local:ConverterBoolToVisibilityInvert x:Key="BooltoVisInvert"/>
+    <local:ConverterBoolToVisibilityInvert x:Key="BoolToVisInvert"/>
+    <local:ConverterNullToVisibilityInvert x:Key="NotANullVisibility"/>
 
 </ResourceDictionary>

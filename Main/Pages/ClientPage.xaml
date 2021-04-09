@@ -1,0 +1,198 @@
+﻿<Page x:Class="Main.Pages.ClientPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Main.Pages"
+      mc:Ignorable="d" 
+      DataContext="{Binding Source={StaticResource Locator}, Path=ClientViewModel}"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ClientPage">
+
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Style="{DynamicResource TextBlock_H1}" 
+                   Grid.Column="1"
+                   Text="Заказы"
+                   HorizontalAlignment="Left" Margin="30,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+
+        <Border
+                  BorderBrush="White"
+                  Background="White"
+                  Grid.Column="1"
+                    CornerRadius="4"
+                    Padding="10 15"
+                  Grid.Row="1"
+            VerticalAlignment="Top"
+                  BorderThickness="3">
+
+            <ItemsControl Grid.Column="1" ItemsSource="{Binding Orders}" Grid.Row="1">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0 7" Orientation="Horizontal">
+                            <TextBlock Width="120"   
+                                   
+                                   Style="{DynamicResource TextBlock_H2}" 
+                                   Text="{Binding PersonalSale, StringFormat='Общая скидка {}{0}%'}">
+                            <Run Text="Заказ №"/>
+                            <Run Text="{Binding Id}"/>
+                            </TextBlock>
+
+                            <TextBlock Width="180" Style="{DynamicResource TextBlock_H3}" Text="{Binding CreationDate, StringFormat='dd.MM.yyyy hh:mm'}"/>
+                            <TextBlock Width="100"                                               
+                                               Style="{DynamicResource TextBlock_H3}" Text="{Binding FullCost, StringFormat='{}{0}р.'}"/>
+
+
+                            <Button Content="Детали заказа" 
+                                Command="{Binding SelectOrder}"
+                                Style="{DynamicResource LinkButton}"
+                                DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                FontSize="14"
+                                Width="150"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}, Path=DataContext}"
+                                />
+
+                            <Button Content="Отмена заказа" 
+                                Command="{Binding CancelOrder}"
+                                Style="{DynamicResource LinkButton}"
+                                DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                FontSize="14"
+                                    Width="150"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}, Path=DataContext}"
+                                />
+
+                            <TextBlock Width="100"                                               
+                                        Style="{DynamicResource TextBlock_H3}" 
+                                       Foreground="Red"
+                                       Visibility="{Binding IsCanceled, Converter={StaticResource BoolToVis}}"
+                                       Text="(Отменен)"/>
+                            
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <Rectangle 
+            Visibility="{Binding ElementName=expander, Path=IsExpanded, Converter={StaticResource BoolToVis}}"
+            Grid.ColumnSpan="3" Grid.RowSpan="3" Fill="#4C000000"/>
+
+        <Border
+                  BorderBrush="White"
+                  Background="White"
+                  Grid.Column="1"
+                CornerRadius="4"
+                Padding="10 5"
+                  VerticalAlignment="Bottom" 
+                  Grid.Row="1"
+                  Visibility="{Binding SelectedOrder, Converter={StaticResource NotANullVisibility}}"
+                  BorderThickness="3">
+            
+        
+        <Expander ExpandDirection="Up"
+                  Visibility="{Binding SelectedOrder, Converter={StaticResource NotANullVisibility}}"
+                  x:Name="expander"
+                  Header="Детали заказа"
+                  FontSize="17">
+            <Expander.Style>
+                <Style TargetType="Expander">
+                    <Style.Triggers>
+                        <Trigger Property="Visibility" Value="Visible">
+                            <Setter Property="IsExpanded" Value="True"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Expander.Style>
+
+            <Grid Margin="25 0 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel >
+                    <TextBlock Text="Товары:" Style="{DynamicResource TextBlock_H3}" FontSize="19"/>
+                    <ItemsControl Margin="10 15" ItemsSource="{Binding OrderedProducts}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0 5" Orientation="Horizontal">
+                                    <TextBlock Width="180"
+                                               FontStyle="Italic"
+                                               Style="{DynamicResource TextBlock_H3}" 
+                                               Text="{Binding ProductDto.Name}"/>
+
+                                    <TextBlock Width="110"
+                                               FontStyle="Italic"
+                                               Style="{DynamicResource TextBlock_H3}" 
+                                               Text="{Binding ProductDto.Manufacturer}"/>
+
+                                    <TextBlock Width="70"
+                                               Style="{DynamicResource TextBlock_H3}"
+                                               FontStyle="Italic"
+                                               Text="{Binding Count, StringFormat='{}{0} шт.'}"/>
+                                    <TextBlock Width="110"
+                                               Style="{DynamicResource TextBlock_H3}"
+                                               FontStyle="Italic"
+                                               Text="{Binding Cost, StringFormat='{}{0} р.'}"/>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
+                </StackPanel>
+
+                <StackPanel Grid.Row="1"
+                            Visibility="{Binding IsServicesExist, Converter={StaticResource BoolToVis}}"
+                            Margin="0 20" >
+                    <TextBlock Text="Услуги:" FontSize="19" Style="{DynamicResource TextBlock_H3}"/>
+                    <ItemsControl Margin="10 15" ItemsSource="{Binding OrderedServices}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0 5" Orientation="Horizontal">
+                                    <TextBlock Width="190" 
+                                               FontStyle="Italic"
+                                               Style="{DynamicResource TextBlock_H3}" Text="{Binding Name}"/>
+                                    <TextBlock Width="110"
+                                               FontStyle="Italic"                                               
+                                               Style="{DynamicResource TextBlock_H3}" Text="{Binding Cost, StringFormat='{}{0} р.'}"/>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
+
+            </Grid>
+            
+            
+        </Expander>
+        </Border>
+        
+        
+        
+        <Button 
+            Grid.Column="1"
+                    Content="Назад"
+                    FontSize="14"
+                    FontFamily="Trebuchet MS"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Grid.Row="2"
+                    Padding="45 8 " 
+                    Command="{Binding BackCommand}"/>
+
+    </Grid>
+</Page>

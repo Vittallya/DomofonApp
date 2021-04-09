@@ -20,7 +20,7 @@
 
         
 
-        <StackPanel  Grid.Row="1" HorizontalAlignment="Center">
+        <StackPanel  Grid.Row="1" Width="400" HorizontalAlignment="Center">
 
 
             <StackPanel Margin="0 5">
@@ -32,7 +32,6 @@
 
             <TextBox Margin="0 5 0 0"
                      FontSize="15"
-                     Width="250"
                      Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
@@ -46,6 +45,8 @@
                 <ContentPresenter  Margin="0 5 0 0" TextBlock.FontSize="15" Content="{Binding PasswordBox}"/>
             </StackPanel>
 
+            
+            
             <Button 
                     Margin="0 25"
                     FontSize="16"
@@ -55,6 +56,13 @@
                     Content="Продолжить" 
                     Padding="55 10" 
                     Command="{Binding LoginCommand}"/>
+
+            <TextBlock 
+                Style="{DynamicResource SprigniessText}" 
+                Foreground="Red"
+                FontSize="16"
+                Visibility="{Binding IsErrorVisible, Converter={StaticResource BoolToVis}}"
+                Text="{Binding ErrorMessage}"/>
 
         </StackPanel>
 

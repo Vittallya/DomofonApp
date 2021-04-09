@@ -18,7 +18,7 @@ namespace BL
         private readonly MapperService mapper;
         Order _currentOrder;
         private IEnumerable<OrderedProduct> _orderedProducts;
-        private IEnumerable<Service> _services;
+        private IEnumerable<int> _services;
         private int _clientId;
         private double _fullCost;
 
@@ -58,8 +58,10 @@ namespace BL
 
             _services = services.Select(x =>
             {
-                var inst = mapper.MapTo<ServiceDto, Service>(x);
-                return inst;
+                //var inst = mapper.MapTo<ServiceDto, Service>(x);
+                //inst.Orders = new List<Order> { _currentOrder };  
+                //return inst;
+                return x.Id;
             }).ToList();
 
         }
@@ -78,12 +80,12 @@ namespace BL
 
 
         public async Task<bool> ApplyOrder()
-        {         
+        {
+            await dbContext.Services.LoadAsync();
             _currentOrder.FullCost = _fullCost;
             // при редактировании ???
             _currentOrder.OrderedProducts = _orderedProducts.ToList();
 
-            _currentOrder.Services = _services.ToList();
             
             if (!IsEdit)
             {
@@ -91,6 +93,7 @@ namespace BL
                 _currentOrder.OrderStatus = OrderStatus.Active;
                 _currentOrder.ClientId = _clientId;
                 dbContext.Orders.Add(_currentOrder);
+                
             }
             else
             {
@@ -99,6 +102,12 @@ namespace BL
                     dbContext.OrderedProducts.Where(x => x.OrderId == _currentOrder.Id));
 
                 dbContext.Entry(_currentOrder).State = EntityState.Modified;
+            }
+            foreach (var sId in _services)
+            {
+                var serv = await dbContext.Services.FindAsync(sId);
+                serv.Orders = new List<Order> { _currentOrder };
+                dbContext.Entry(serv).State = EntityState.Modified;
             }
 
             try
@@ -123,10 +132,61 @@ namespace BL
             var list = await dbContext.
                 Orders.
                 AsNoTracking().
-                Where(x => x.ClientId == clientId).
+                Where(x => x.ClientId == clientId && x.OrderStatus == OrderStatus.Active).
+                OrderBy(x => x.CreationDate).
                 ToListAsync();
 
-            return list.Select(y => mapper.MapTo<Order, OrderDto>(y));
+            return list.Select(y => 
+            { 
+                var inst = mapper.MapTo<Order, OrderDto>(y);
+                return inst;
+            });
+        }
+
+        public async Task<IEnumerable<ServiceDto>> GetOrderedServices(int orderId)
+        {
+            await dbContext.Orders.Include(x => x.Services).LoadAsync();
+
+            var order = await dbContext.Orders.FindAsync(orderId);
+
+            var list = order.Services;
+
+            return list.Select(y =>
+            {
+                var inst = mapper.MapTo<Service, ServiceDto>(y);
+                return inst;
+            });
+        }
+
+        public async Task<IEnumerable<OrderedProductDto>> GetOrderedProducts(int orderId)
+        {
+            await dbContext.OrderedProducts.LoadAsync();
+
+            var order = await dbContext.Orders.FindAsync(orderId);
+
+            var list = await dbContext.
+                OrderedProducts.
+                AsNoTracking().
+                Where(x => x.OrderId == orderId).
+                ToListAsync();
+
+            return list.Select(y =>
+            {
+                var inst = mapper.MapTo<OrderedProduct, OrderedProductDto>(y);
+                inst.ProductDto = mapper.MapTo<Product, ProductDto>(y.Product);
+                return inst;
+            });
+        }
+
+        public async Task<OrderDto> CancelOrder(int orderId)
+        {
+            await dbContext.Orders.LoadAsync();
+            var order = await dbContext.Orders.FindAsync(orderId);
+
+            order.OrderStatus = OrderStatus.Canceled;
+            dbContext.Entry(order).State = EntityState.Modified;
+            await dbContext.SaveChangesAsync();
+            return mapper.MapTo<Order, OrderDto>(order);
         }
     }
 }

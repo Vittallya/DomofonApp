@@ -10,6 +10,7 @@ using DAL.Models;
 using DAL.Dto;
 using System.Windows.Input;
 using AutoMapper;
+using Main.Events;
 
 namespace Main.ViewModels
 {
@@ -19,16 +20,18 @@ namespace Main.ViewModels
         private readonly EventBus eventBus;
         private readonly BasketService basketService;
         private readonly UserService userService;
+        private readonly RegisterService registerService;
 
         public bool IsLoading { get; set; }
 
         public CatalogViewModel(PageService pageservice, BL.CatalogService catalogService, 
-            EventBus eventBus, BasketService basketService, UserService userService) : base(pageservice)
+            EventBus eventBus, BasketService basketService, UserService userService, RegisterService registerService) : base(pageservice)
         {
             this.catalogService = catalogService;
             this.eventBus = eventBus;
             this.basketService = basketService;
             this.userService = userService;
+            this.registerService = registerService;
             Init();
          
         }
@@ -72,36 +75,54 @@ namespace Main.ViewModels
 
         public ICommand ToBasket => new Command(x =>
         {
-            pageservice.ChangePage<Pages.BasketPage>(DisappearAnimation.Default);
+            pageservice.ChangePage<Pages.BasketPage>(PoolIndex, DisappearAnimation.Default);
         });
 
 
-        public bool IsEntered { get; set; }
+        public bool IsAutorized { get; set; }
 
-
-
-        async Task OnAccEntered()
-        {
-            IsEntered = true;
-        }
+        public string ClientName { get; set; }
 
         async void Init()
-        {
-            
+        {            
             IsLoading = true;
-            userService.Autorized += UserService_Autorized;
-            userService.Exited += UserService_Exited;
+            IsAutorized = userService.IsAutorized;
+            ClientName = userService.CurrentUser?.Name;
             await Reload();
         }
 
-        private void UserService_Exited()
+        public ICommand ToLogin => new Command(x =>
         {
-            
+            pageservice.ChangePage<Pages.LoginPage>(PoolIndex, DisappearAnimation.Default);
+            eventBus.Subscribe<Events.AccountEntered, CatalogViewModel>(OnEntered);
+        });
+
+        public ICommand LogoutCommand => new Command(x =>
+        {
+            userService.Logout();
+            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
+        });
+
+        private async Task OnEntered(AccountEntered arg)
+        {
+            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
-        private void UserService_Autorized()
+        public ICommand ToRegister => new Command(x =>
         {
-            
+            registerService.IsRegisterRequiered = true;
+            pageservice.ChangePage<Pages.ClientRegisterPage>(PoolIndex, DisappearAnimation.Default);
+            eventBus.Subscribe<Events.ClientRegistered, CatalogViewModel>(OnRegistered);
+        });
+
+        public ICommand ToProfileView => new Command(x =>
+        {
+            pageservice.ChangePage<Pages.ClientPage>(DisappearAnimation.Default);
+        });
+
+        private async Task OnRegistered(ClientRegistered arg)
+        {
+            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
         async Task Reload()

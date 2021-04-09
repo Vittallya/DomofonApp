@@ -17,10 +17,34 @@ namespace BL
         private readonly UserService userService;
 
         public bool IsEdit { get; private set; }
+
+        
         public string ErrorMessage { get; private set; }
+
+        /// <summary>
+        /// Свойство, говорящее о том, необходимо ли пользователю вводить логин и пароль. (Это свойсвтво само сбросится после его прочтения)
+        /// </summary>
+        public bool IsRegisterRequiered 
+        {
+            get 
+            {
+                var temp = isRegisterRequiered;
+                isRegisterRequiered = false; 
+                return temp; 
+            } 
+            set => isRegisterRequiered = value; 
+        }
 
         private Client _client;
         private Profile _profile;
+        private bool isRegisterRequiered;
+
+        public void Clear()
+        {
+            _client =null;
+            _profile =null;
+            isRegisterRequiered = false;
+        }
 
         public RegisterService(AllDbContext dbContext, MapperService mapperService, UserService userService)
         {
@@ -44,17 +68,32 @@ namespace BL
         public void SetupClient(ClientDto dto)
         {
             _client = mapperService.MapTo<ClientDto, Client>(dto);
-            
+
         }
 
-        public void SetupProfile(ProfileDto profileDto)
+        public async Task<bool> SetupProfile(ProfileDto profileDto)
         {
+            await dbContext.Profiles.LoadAsync();
+
+            if (await dbContext.Profiles.AnyAsync(x => x.Login == profileDto.Login))
+            {
+                ErrorMessage = "Такой логин уже есть";
+                return false;
+            }
+
+            if (await dbContext.Profiles.AnyAsync(x => x.Password == profileDto.Password))
+            {
+                ErrorMessage = "Такой пароль уже есть";
+                return false;
+            }
             _profile = mapperService.MapTo<ProfileDto, Profile>(profileDto);
+
+            return true;
         }
 
         public async Task<(bool, int)> RegisterAsync()
         {
-            if(_profile != null)
+            if (_profile != null)
             {
                 _profile.Client = _client;
                 _client.Profile = _profile;
@@ -65,9 +104,9 @@ namespace BL
 
             try
             {
-                await dbContext.SaveChangesAsync();                
+                await dbContext.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
                 return (false, 0);

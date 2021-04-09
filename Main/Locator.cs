@@ -22,6 +22,7 @@ namespace Main
         public  ViewModels.BasketViewModel BasketViewModel => Services.GetRequiredService<BasketViewModel>();
         public  ViewModels.ClientRegisterViewModel ClientRegisterViewModel => Services.GetRequiredService<ClientRegisterViewModel>();
         public  ViewModels.OrderResultViewModel OrderResultViewModel => Services.GetRequiredService<OrderResultViewModel>();
+        public  ViewModels.ClientViewModel ClientViewModel => Services.GetRequiredService<ClientViewModel>();
     }
 }
 
