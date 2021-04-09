@@ -5,33 +5,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL;
+using DAL.Dto;
 using DAL.Models;
 
 namespace BL
 {    
 
-    public class LoginService : ILoginService
+    public class LoginService
     {
         private AllDbContext dbContext;
+        private readonly UserService userService;
+        private readonly MapperService mapper;
 
-        public int Time { get; } = 5;
-
-        public LoginService(AllDbContext dbContext)
+        public LoginService(AllDbContext dbContext, UserService userService, MapperService mapper)
         {
             this.dbContext = dbContext;
+            this.userService = userService;
+            this.mapper = mapper;
         }
 
         public string ErrorMessage { get; private set; }
+        
 
-        public bool CheckCode(string code)
+        public async Task<bool> Login(string login, string pass)
         {
-            return true;
-        }
+            await dbContext.Profiles.Include(x => x.Client).LoadAsync();
 
-        public async Task<bool> SendCodeAsync()
-        {
-            await Task.Delay(Time * 1000);
-            return true;
+            var user = await dbContext.
+                Profiles.
+                FirstOrDefaultAsync(x => string.Compare(x.Login, login) == 0 && string.Compare(x.Password, pass) == 0);
+
+            if (user != null)
+            {
+                var dto = mapper.MapTo<Client, ClientDto>(user.Client);
+                userService.SetupUser(dto);
+                return true;
+            }
+            ErrorMessage = "Неверный логин или пароль или и то и то";
+
+            return false;
         }
 
     }

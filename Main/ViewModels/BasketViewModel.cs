@@ -15,6 +15,9 @@ namespace Main.ViewModels
         private readonly BasketService basketService;
         private readonly CatalogService catalogService;
         private readonly ServicesService servicesService;
+        private readonly OrderService orderService;
+        private readonly UserService userService;
+        private readonly EventBus eventBus;
         private readonly Timer timer = new Timer(5, 100);
 
         public ObservableCollection<OrderedProductDto> OrderedProducts { get; set; }
@@ -34,11 +37,16 @@ namespace Main.ViewModels
             pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
-        public BasketViewModel(PageService pageservice, BasketService basketService, CatalogService catalogService, ServicesService servicesService) : base(pageservice)
+        public BasketViewModel(PageService pageservice, BasketService basketService, 
+            CatalogService catalogService, ServicesService servicesService, 
+            OrderService orderService, UserService userService, EventBus eventBus) : base(pageservice)
         {
             this.basketService = basketService;
             this.catalogService = catalogService;
             this.servicesService = servicesService;
+            this.orderService = orderService;
+            this.userService = userService;
+            this.eventBus = eventBus;
             Init();
         }
 
@@ -78,6 +86,26 @@ namespace Main.ViewModels
             await Calculate();
             await basketService.SetupFilledProducts(OrderedProducts);
             await servicesService.SetupUsedServices(IncludedServices);
+        }
+
+        protected override async void Next()
+        {
+            await orderService.SetupData(OrderedProducts, IncludedServices, FinalCost);
+            if (userService.IsAutorized)
+            {
+                await OnRegister(new Events.ClientRegistered(userService.CurrentUser));
+            }
+            else
+            {
+                pageservice.ChangePage<Pages.ClientRegisterPage>(DisappearAnimation.Default);
+                eventBus.Subscribe<Events.ClientRegistered, BaseViewModel>(OnRegister);
+            }
+        }
+
+        async Task OnRegister(Events.ClientRegistered obj)
+        {
+            orderService.SetupClient(obj.User.Id);
+            pageservice.ChangePage<Pages.OrderResultPage>(DisappearAnimation.Default);
         }
 
 

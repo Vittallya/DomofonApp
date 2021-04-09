@@ -15,13 +15,16 @@ namespace Main
         {
             services.AddTransient<AllDbContext>();
             services.AddTransient<DbContextLoader>();
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<LoginService>();
+            services.AddTransient<MapperService>();
+            services.AddSingleton<RegisterService>();
             services.AddSingleton<ClientPipeHanlder>();
             services.AddTransient<Services.UpdateHandlerService>();
             services.AddSingleton<BL.OrderService>();
             services.AddSingleton<BL.CatalogService>();
             services.AddSingleton<BL.BasketService>();
             services.AddSingleton<BL.ServicesService>();
+            services.AddSingleton<UserService>();
         }
     }
 }

@@ -43,7 +43,7 @@
                 <ListView.View>
                     <GridView>
 
-                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Product.Name}"/>
+                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding ProductDto.Name}"/>
                         <GridViewColumn Header="Количество" >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate >
@@ -143,6 +143,7 @@
 
                 <StackPanel Grid.ColumnSpan="2">
                     <Button 
+                        FontSize="14"
                         Command="{Binding OpenPrompt}"
                         Margin="0 5" Content="Добавить услугу" Style="{DynamicResource LinkButton}"/>
                     
@@ -205,6 +206,18 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Command="{Binding BackCommand}"/>
+        
+        <Button Content="Оформить заказ" 
+                Grid.Row="3"
+                FontWeight="Bold"
+                FontSize="16"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Padding="45 7"
+                
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Command="{Binding NextCommand}"/>
 
         <Rectangle Visibility="{Binding IsPromtVisible, Converter={StaticResource BoolToVis}}" 
                    Grid.ColumnSpan="3" Grid.RowSpan="4" Fill="#7F000000"/>

@@ -12,15 +12,18 @@ namespace BL
 {
     public class BasketService
     {
+
         public void Clear()
         {
+            orderedProducts.Clear();
+
         }
 
         List<OrderedProductDto> orderedProducts = new List<OrderedProductDto>();
         private readonly AllDbContext dbContext;
+        private readonly MapperService mapper;
 
-
-        public int BasketCount => orderedProducts.Count;
+        public int BasketCount => orderedProducts?.Count ?? 0;
 
         public ProductDto AddToBasket(ProductDto product)
         {
@@ -28,13 +31,13 @@ namespace BL
 
             var instance = mapper.Map<ProductDto>(product);
             instance.IsInBasket = true;            
-            orderedProducts.Add(new OrderedProductDto { Product = instance, Count = 1 });
+            orderedProducts.Add(new OrderedProductDto { ProductDto = instance, Count = 1 });
             return instance;
         }
 
         public ProductDto RemoveFromBasket(ProductDto product)
         {
-            var removable = orderedProducts.Find(x => x.Product.Id == product.Id);
+            var removable = orderedProducts.Find(x => x.ProductDto.Id == product.Id);
             orderedProducts.Remove(removable);
 
             Mapper mapper = new Mapper(new MapperConfiguration(z => z.CreateMap<ProductDto, ProductDto>()));
@@ -50,7 +53,7 @@ namespace BL
 
         public async Task SetupFilledProducts(IEnumerable<OrderedProductDto> productDtos)
         {
-            await Task.Run(() => orderedProducts = productDtos.Select(x => GetCopy(x)).ToList());
+            await Task.Run(() => orderedProducts = productDtos.Select(x => mapper.GetCopy(x)).ToList());
         }
 
         public OrderedProductDto IncreaceCount(OrderedProductDto dto)
@@ -65,28 +68,29 @@ namespace BL
             if (dto.Count <= 1)
                 return dto;
 
-            var instance = GetCopy(dto);
+            var instance = mapper.GetCopy(dto);
             instance.Count--;
             return instance;
         }
 
         public IEnumerable<ProductDto> GetCatalog()
         {
-            return orderedProducts.Select(x => x.Product);
+            return orderedProducts.Select(x => x.ProductDto);
         }
 
         public async Task<OrderedProductDto> UpdateSale(OrderedProductDto dto)
         {
-            var instance = GetCopy(dto);
-            var sale = await GetMaxCommonSale(dto.Product.Id, dto.Count);
+            var instance = mapper.GetCopy(dto);
+            var sale = await GetMaxCommonSale(dto.ProductDto.Id, dto.Count);
             instance.CommonSale = sale;
 
             return instance;
         }
 
-        public BasketService(AllDbContext dbContext)
+        public BasketService(AllDbContext dbContext, MapperService mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task<double> GetMaxCommonSale(int productId, int count)
@@ -101,17 +105,5 @@ namespace BL
             return sale?.SaleValue ?? 0;
         }
 
-
-        public T GetCopy<T>(T obj)
-        {
-            Mapper mapper = new Mapper(new MapperConfiguration(z => z.CreateMap<T, T>()));
-            return mapper.Map<T>(obj);
-        }
-
-
-        double GetCost(int count, double unitCost)
-        {
-            return count * unitCost;
-        }
     }
 }

@@ -15,9 +15,12 @@ namespace BL
     public class OrderService
     {
         private readonly AllDbContext dbContext;
-
-        OrderDto _currentOrder;
-        List<OrderedProductDto> _orderedProducts;
+        private readonly MapperService mapper;
+        Order _currentOrder;
+        private IEnumerable<OrderedProduct> _orderedProducts;
+        private IEnumerable<Service> _services;
+        private int _clientId;
+        private double _fullCost;
 
         public bool IsEdit { get; private set; }
         public bool IsStarted { get; private set; }
@@ -28,51 +31,102 @@ namespace BL
             IsStarted = false;
             _currentOrder = null;
             _orderedProducts = null;
+            _services = null;
         }
 
-        public OrderService(AllDbContext dbContext)
+        public OrderService(AllDbContext dbContext, MapperService mapperService)
         {
             this.dbContext = dbContext;
+            this.mapper = mapperService;
         }
 
-        public void StartOrder(IEnumerable<OrderedProductDto> orderedProducts)
+        public async Task SetupData(IEnumerable<OrderedProductDto> orderedProducts, IEnumerable<ServiceDto> services,
+            double fullCost, int? orderId = null)
         {
-            IsEdit = false;        
-            _orderedProducts = orderedProducts.ToList();
-            _currentOrder = new OrderDto();
+            _fullCost = fullCost;
+            IsEdit = orderId.HasValue;
+            _currentOrder = IsEdit ? (await dbContext.Orders.FindAsync(orderId.Value)) : new Order();
+
+            _orderedProducts = orderedProducts.
+                Select(x =>
+                {
+                    var inst = mapper.MapTo<OrderedProductDto, OrderedProduct>(x);
+                    inst.ProductId = x.ProductDto.Id;
+                    inst.Order = _currentOrder;
+                    return inst;
+                }).ToList(); 
+
+            _services = services.Select(x =>
+            {
+                var inst = mapper.MapTo<ServiceDto, Service>(x);
+                return inst;
+            }).ToList();
+
         }
 
-        
-
-        
-
-        public OrderDto GetOrder()
+        public void SetupClient(int clientId)
         {
-            Mapper mapper = new Mapper(new MapperConfiguration(x => x.CreateMap<OrderDto, OrderDto>()));
-
-            var copy = mapper.Map<OrderDto>(_currentOrder);
-            return copy;
+            _clientId = clientId;
         }
 
-        public void SetupOrder()
+        public void SetupOrderData(OrderDto order)
         {
-
+            int id = _currentOrder.Id;
+            _currentOrder = mapper.MapTo<OrderDto, Order>(order);
+            _currentOrder.Id = id;
         }
+
+
+        public async Task<bool> ApplyOrder()
+        {         
+            _currentOrder.FullCost = _fullCost;
+            // при редактировании ???
+            _currentOrder.OrderedProducts = _orderedProducts.ToList();
+
+            _currentOrder.Services = _services.ToList();
+            
+            if (!IsEdit)
+            {
+                _currentOrder.CreationDate = DateTimeOffset.Now;
+                _currentOrder.OrderStatus = OrderStatus.Active;
+                _currentOrder.ClientId = _clientId;
+                dbContext.Orders.Add(_currentOrder);
+            }
+            else
+            {
+                //Удаление старых
+                dbContext.OrderedProducts.RemoveRange(
+                    dbContext.OrderedProducts.Where(x => x.OrderId == _currentOrder.Id));
+
+                dbContext.Entry(_currentOrder).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return false;
+            }
+
+            return true;
+        }
+
+        public string ErrorMessage { get; private set; }
 
         public async Task<IEnumerable<OrderDto>> GetAllOrders(int clientId)
         {
             await dbContext.Orders.LoadAsync();
 
-            Mapper mapper = new Mapper(new MapperConfiguration(x => x.CreateMap<Order, OrderDto>()));
-
             var list = await dbContext.
                 Orders.
                 AsNoTracking().
                 Where(x => x.ClientId == clientId).
-                Select(y => mapper.Map<Order, OrderDto>(y)).
                 ToListAsync();
 
-            return list;
+            return list.Select(y => mapper.MapTo<Order, OrderDto>(y));
         }
     }
 }

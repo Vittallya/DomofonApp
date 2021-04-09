@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace DAL.Models
 {
+    public enum OrderStatus
+    {
+        Active, Completed, Canceled
+    }
+
     public class Order
     {
         public int Id { get; set; }
@@ -23,6 +28,8 @@ namespace DAL.Models
         public virtual ICollection<Service> Services { get; set; }
         public virtual Client Client { get; set; }
         public virtual ICollection<OrderedProduct> OrderedProducts { get; set; }
+
+        public OrderStatus OrderStatus { get; set; }
 
     }
 }

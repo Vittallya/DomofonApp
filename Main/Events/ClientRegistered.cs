@@ -1,5 +1,6 @@
 ﻿using BL;
 using DAL;
+using DAL.Dto;
 using MVVM_Core;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Main.Events
 {
     public class ClientRegistered: IEvent
     {
-        public ClientRegistered(IUser user)
+        public ClientRegistered(ClientDto user)
         {
             User = user;
         }
 
-        public IUser User { get; set; }
+        public ClientDto User { get; set; }
 
     }
 }

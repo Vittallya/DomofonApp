@@ -14,14 +14,21 @@ namespace BL
     public class ServicesService
     {
         private readonly AllDbContext dbContext;
+        private readonly MapperService mapper;
         private IEnumerable<ServiceDto> usedServices;
         private IEnumerable<ServiceDto> allServices;
 
         public bool ServicesSelected => usedServices != null;
 
-        public ServicesService(AllDbContext dbContext)
+        public void Clear()
+        {
+            usedServices = null;
+        }
+
+        public ServicesService(AllDbContext dbContext, MapperService mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task ReloadAsync()
@@ -30,9 +37,7 @@ namespace BL
 
             var list = dbContext.Services.AsNoTracking().ToList();
 
-            Mapper mapper = new Mapper(new MapperConfiguration(z => z.CreateMap<Service, ServiceDto>()));
-
-            allServices = list.Select(x => mapper.Map<Service, ServiceDto>(x));
+            allServices = list.Select(x => mapper.MapTo<Service, ServiceDto>(x));
         }
 
         public IEnumerable<ServiceDto> GetAllServices()
@@ -57,13 +62,7 @@ namespace BL
 
         public async Task SetupUsedServices(IEnumerable<ServiceDto> services)
         {
-            await Task.Run(() => usedServices = services.Select(x => GetCopy(x)));
-        }
-
-        public T GetCopy<T>(T obj)
-        {
-            Mapper mapper = new Mapper(new MapperConfiguration(z => z.CreateMap<T, T>()));
-            return mapper.Map<T>(obj);
+            await Task.Run(() => usedServices = services.Select(x => mapper.GetCopy(x)));
         }
     }
 }

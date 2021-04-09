@@ -27,5 +27,6 @@ namespace DAL
         public DbSet<Models.Product> Products { get; set; }
         public DbSet<Models.Profile> Profiles { get; set; }
         public DbSet<Models.Service> Services { get; set; }
+        public DbSet<Models.OrderedProduct> OrderedProducts { get; set; }
     }
 }

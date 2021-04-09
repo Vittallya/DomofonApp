@@ -69,9 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllDbContext.cs" />
+    <Compile Include="Dto\ClientDto.cs" />
     <Compile Include="Dto\OrderDto.cs" />
     <Compile Include="Dto\OrderedProductDto.cs" />
     <Compile Include="Dto\ProductDto.cs" />
+    <Compile Include="Dto\ProfileDto.cs" />
     <Compile Include="Dto\ServiceDto.cs" />
     <Compile Include="Interfaces\IDto.cs" />
     <Compile Include="Migrations\202104022011087_InitialCreate.cs" />
@@ -89,6 +91,10 @@
     <Compile Include="Migrations\202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.cs" />
     <Compile Include="Migrations\202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.designer.cs">
       <DependentUpon>202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104081734090_orderStatus.cs" />
+    <Compile Include="Migrations\202104081734090_orderStatus.designer.cs">
+      <DependentUpon>202104081734090_orderStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
@@ -130,6 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.resx">
       <DependentUpon>202104061601178_OrderedProduct_as_ManyToMany_betw_Prodcut_Order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104081734090_orderStatus.resx">
+      <DependentUpon>202104081734090_orderStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

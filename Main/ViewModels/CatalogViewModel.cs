@@ -18,14 +18,17 @@ namespace Main.ViewModels
         private readonly CatalogService catalogService;
         private readonly EventBus eventBus;
         private readonly BasketService basketService;
+        private readonly UserService userService;
 
         public bool IsLoading { get; set; }
 
-        public CatalogViewModel(PageService pageservice, BL.CatalogService catalogService, EventBus eventBus, BasketService basketService) : base(pageservice)
+        public CatalogViewModel(PageService pageservice, BL.CatalogService catalogService, 
+            EventBus eventBus, BasketService basketService, UserService userService) : base(pageservice)
         {
             this.catalogService = catalogService;
             this.eventBus = eventBus;
             this.basketService = basketService;
+            this.userService = userService;
             Init();
          
         }
@@ -72,10 +75,33 @@ namespace Main.ViewModels
             pageservice.ChangePage<Pages.BasketPage>(DisappearAnimation.Default);
         });
 
+
+        public bool IsEntered { get; set; }
+
+
+
+        async Task OnAccEntered()
+        {
+            IsEntered = true;
+        }
+
         async void Init()
         {
+            
             IsLoading = true;
+            userService.Autorized += UserService_Autorized;
+            userService.Exited += UserService_Exited;
             await Reload();
+        }
+
+        private void UserService_Exited()
+        {
+            
+        }
+
+        private void UserService_Autorized()
+        {
+            
         }
 
         async Task Reload()

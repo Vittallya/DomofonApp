@@ -12,12 +12,12 @@ namespace DAL.Dto
     public class OrderedProductDto
     {
         
-        public double Cost => Count * Product.Cost;
+        public double Cost => Count * ProductDto.Cost;
 
         public double SaleCost => Cost - (Cost * CommonSale / 100);
 
         public int Count { get; set; }
         public double CommonSale { get; set; }
-        public virtual ProductDto Product { get; set; }
+        public virtual ProductDto ProductDto { get; set; }
     }
 }

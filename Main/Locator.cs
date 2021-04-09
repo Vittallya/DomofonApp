@@ -20,6 +20,8 @@ namespace Main
         public  LoginViewModel LoginViewModel => Services.GetRequiredService<LoginViewModel>();
         public  CatalogViewModel CatalogViewModel => Services.GetRequiredService<CatalogViewModel>();
         public  ViewModels.BasketViewModel BasketViewModel => Services.GetRequiredService<BasketViewModel>();
+        public  ViewModels.ClientRegisterViewModel ClientRegisterViewModel => Services.GetRequiredService<ClientRegisterViewModel>();
+        public  ViewModels.OrderResultViewModel OrderResultViewModel => Services.GetRequiredService<OrderResultViewModel>();
     }
 }
 
