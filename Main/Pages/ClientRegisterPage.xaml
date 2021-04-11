@@ -85,13 +85,15 @@
             
         </Grid>
 
-        <Button Content="Назад"                 
+        <Button               
                 Grid.Row="3"
                 Grid.Column="1"
-                Padding="35 5"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Command="{Binding BackCommand}"/>
+                Style="{DynamicResource ButtonEmpty}"
+                Command="{Binding BackCommand}">
+            <Image Source="{DynamicResource Back}" Height="55"/>
+        </Button>
 
         <Button Content="Продолжить" 
                 Grid.Row="3"

@@ -53,7 +53,7 @@
                     FontFamily="Trebuchet MS"
                     FontWeight="Bold"
                     HorizontalAlignment="Center"
-                    Content="Продолжить" 
+                    Content="Войти" 
                     Padding="55 10" 
                     Command="{Binding LoginCommand}"/>
 
@@ -67,16 +67,16 @@
         </StackPanel>
 
         <Button 
-                    Margin="25"  
-                    Content="Назад"
+                    Margin="45 25"  
                     FontSize="14"
                     FontFamily="Trebuchet MS"
-                    Style="{StaticResource ButtonSkip}"
+                    Style="{StaticResource ButtonEmpty}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-            Grid.Row="1"
-                    Padding="45 8   " 
-                    Command="{Binding BackCommand}"/>
+                    Grid.Row="1"
+                    Command="{Binding BackCommand}">
+            <Image Source="{DynamicResource Back}" Height="55"/>
+        </Button>
 
     </Grid>
 </Page>

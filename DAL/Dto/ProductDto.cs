@@ -14,7 +14,7 @@ namespace DAL.Dto
         public string Manufacturer { get; set; }
 
         public double Cost { get; set; }
-
+        public string ImageFullPath { get; set; }
         public bool IsInBasket { get; set; }
     }
 }

@@ -130,7 +130,6 @@
     <Compile Include="Rules\Statics.cs" />
     <Compile Include="Services\UpdateHandlerService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Components\NotificationItem.cs" />
     <Compile Include="ViewModels\BasketViewModel.cs" />
     <Compile Include="ViewModels\CatalogViewModel.cs" />
     <Compile Include="ViewModels\ClientRegisterViewModel.cs" />

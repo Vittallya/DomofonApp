@@ -11,7 +11,7 @@
 
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
-            <RowDefinition Height="75"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -21,11 +21,13 @@
             <ColumnDefinition Width="12*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
+        <Rectangle Fill="White" Grid.ColumnSpan="3"/>
+
         <TextBlock Style="{DynamicResource TextBlock_H1}" 
                    Grid.Column="1"
                    Text="Заказы"
-                   HorizontalAlignment="Left" Margin="30,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                   HorizontalAlignment="Left" Margin="80,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="165"/>
 
         <Border
                   BorderBrush="White"
@@ -34,6 +36,7 @@
                     CornerRadius="4"
                     Padding="10 15"
                   Grid.Row="1"
+            Margin="0 25"
             VerticalAlignment="Top"
                   BorderThickness="3">
 
@@ -41,7 +44,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="0 7" Orientation="Horizontal">
-                            <TextBlock Width="120"   
+                            <TextBlock Width="160"   
                                    
                                    Style="{DynamicResource TextBlock_H2}" 
                                    Text="{Binding PersonalSale, StringFormat='Общая скидка {}{0}%'}">
@@ -85,7 +88,8 @@
         </Border>
 
         <Rectangle 
-            Visibility="{Binding ElementName=expander, Path=IsExpanded, Converter={StaticResource BoolToVis}}"
+            MouseDown="Rectangle_MouseDown"
+            Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVis}}"
             Grid.ColumnSpan="3" Grid.RowSpan="3" Fill="#4C000000"/>
 
         <Border
@@ -103,6 +107,7 @@
         <Expander ExpandDirection="Up"
                   Visibility="{Binding SelectedOrder, Converter={StaticResource NotANullVisibility}}"
                   x:Name="expander"
+                  IsExpanded="{Binding IsExpanded}"
                   Header="Детали заказа"
                   FontSize="17">
             <Expander.Style>
@@ -180,19 +185,20 @@
             
         </Expander>
         </Border>
-        
-        
-        
+
+
+
         <Button 
             Grid.Column="1"
-                    Content="Назад"
+            Style="{DynamicResource ButtonEmpty}"
                     FontSize="14"
                     FontFamily="Trebuchet MS"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Grid.Row="2"
-                    Padding="45 8 " 
-                    Command="{Binding BackCommand}"/>
+                    Grid.Row="0"
+                    Command="{Binding BackCommand}">
+            <Image Source="{DynamicResource Back}" Height="45"/>
+        </Button>
 
     </Grid>
 </Page>

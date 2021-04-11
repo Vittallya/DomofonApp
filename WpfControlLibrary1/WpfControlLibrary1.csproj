@@ -53,6 +53,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Converters.cs" />
+    <Page Include="Pictures.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -76,6 +80,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\basket.png" />
+    <Resource Include="Images\close.png" />
+    <Resource Include="Images\decreace.png" />
+    <Resource Include="Images\increace.png" />
+    <Resource Include="Images\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\back.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

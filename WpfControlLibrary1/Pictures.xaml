@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="Close" UriSource="Images/close.png"/>
+    <BitmapImage x:Key="Basket" UriSource="Images/basket.png"/>
+    <BitmapImage x:Key="Star" UriSource="Images/star.png"/>
+    <BitmapImage x:Key="Increace" UriSource="Images/increace.png"/>
+    <BitmapImage x:Key="Decreace" UriSource="Images/decreace.png"/>
+    <BitmapImage x:Key="Back" UriSource="Images/back.png"/>
+
+    <Grid x:Key="Plus1">
+        <Border HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Background="Black" Height="1"/>
+    </Grid>
+    
+</ResourceDictionary>

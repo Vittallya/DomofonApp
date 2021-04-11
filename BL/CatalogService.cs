@@ -22,7 +22,10 @@ namespace BL
         }
 
         List<ProductDto> products;
-        public async Task Reload()
+
+        
+
+        public async Task Reload(Func<string, string> pathGetter)
         {
             Mapper mapper = new Mapper(new MapperConfiguration(x => x.CreateMap<Product, ProductDto>()));
 
@@ -34,7 +37,12 @@ namespace BL
                 ToListAsync();
 
             products = list.
-                Select(x => mapper.Map<Product, ProductDto>(x)).
+                Select(x => 
+                {
+                    var inst = mapper.Map<Product, ProductDto>(x);
+                    inst.ImageFullPath = pathGetter?.Invoke(x.ImagePath);
+                    return inst;
+                    }).
                 ToList();
         }
 
@@ -50,7 +58,7 @@ namespace BL
         {
             if(products == null)
             {
-                await Reload();
+                await Reload(x => $"{Environment.CurrentDirectory}\\Images\\{x}.png");
             }
 
             if(name != null)

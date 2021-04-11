@@ -46,10 +46,14 @@ namespace Main.ViewModels
 
         public bool IsServicesExist { get; set; }
 
+
+        public bool IsExpanded { get; set; }
+
         public ICommand SelectOrder => new CommandAsync(async x =>
         {
             if (x is OrderDto dto)
             {
+
                 IsLoadingVisible = true;
                 SelectedOrder = dto;
                 OrderedProducts = new ObservableCollection<OrderedProductDto>(
@@ -60,7 +64,7 @@ namespace Main.ViewModels
                 IsServicesExist = OrderedServices.Count > 0;
 
                 IsLoadingVisible = false;
-
+                IsExpanded = true;
             }
         });
 

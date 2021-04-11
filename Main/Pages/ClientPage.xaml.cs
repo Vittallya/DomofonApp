@@ -24,5 +24,10 @@ namespace Main.Pages
         {
             InitializeComponent();
         }
+
+        private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            expander.IsExpanded = false;
+        }
     }
 }

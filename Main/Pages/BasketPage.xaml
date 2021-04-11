@@ -11,7 +11,7 @@
 
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*"/>
             <RowDefinition Height="75"/>
@@ -25,8 +25,15 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <Rectangle Fill="White" Grid.ColumnSpan="3"/>
+
+        <TextBlock Text="Корзина" Grid.Column="1"
+                   Style="{DynamicResource TextBlock_H1}"
+                   VerticalAlignment="Center"
+                   Margin="80 0 0 0"/>
+
         <Border
-            
+            Margin="0 35"
             Background="White"
             BorderBrush="White"
             CornerRadius="3" 
@@ -52,24 +59,26 @@
                                             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
                                             Command="{Binding MinusCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=DataContext}"                                            
-                                            Padding="10 2" 
-                                            Margin="5" 
-                                            Content="-"/>
+                                            Style="{DynamicResource RepeatButtonEmpty}"
+                                            Padding="10 4"
+                                            Content="-"
+                                            Margin="5" />
 
                                         <TextBlock
                                             TextAlignment="Center"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            Width="50" Text="{Binding Count, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"/>
-                                        
-                                        
+                                            Width="40" Text="{Binding Count, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"/>
+
+
                                         <RepeatButton 
                                             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
                                             Command="{Binding PlusCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=DataContext}"
-                                            Padding="10 2" 
-                                            Margin="5" 
-                                            Content="+"/>
+                                            Content="+"
+                                            Padding="10 5"
+                                            Style="{DynamicResource RepeatButtonEmpty}"
+                                            Margin="5" />
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -128,7 +137,8 @@
             Grid.Row="2"
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled">
-        <Border  
+            
+            <Border  
             Background="White"
             BorderBrush="White"
             CornerRadius="3" 
@@ -145,9 +155,9 @@
 
                 <StackPanel Grid.ColumnSpan="2">
                     <Button 
-                        FontSize="14"
+                        FontSize="16"
                         Command="{Binding OpenPrompt}"
-                        Margin="0 5" Content="Добавить услугу" Style="{DynamicResource LinkButton}"/>
+                        Margin="0 15" Content="Добавить услугу" Style="{DynamicResource LinkButton}"/>
                     
                     <Expander 
                         Visibility="{Binding IsServicesIncluded, Converter={StaticResource BoolToVis}}"
@@ -159,7 +169,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
 
-                                    <StackPanel Margin="15 5 0 0" HorizontalAlignment="Left" Orientation="Horizontal">
+                                    <StackPanel Margin="15 8 0 0" HorizontalAlignment="Left" Orientation="Horizontal">
                                         <TextBlock Width="250" Text="{Binding Name}" Style="{DynamicResource TextBlock_H3}"/>
                                         <TextBlock Width="150" HorizontalAlignment="Right" 
                                                Text="{Binding Cost}" 
@@ -172,6 +182,7 @@
                                                 Style="{DynamicResource LinkButton}"
                                             Padding="15 2"
                                             Grid.Column="1"
+                                                    FontSize="15"
                                             HorizontalAlignment="Right"
                                             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
                                             Command="{Binding RemoveService}"
@@ -201,13 +212,18 @@
         </Border>
 
         </ScrollViewer>
-        <Button Content="Назад в каталог" 
-                Grid.Row="3"
+
+        <Rectangle Grid.Row="3" Grid.ColumnSpan="3" Fill="White"/>
+
+        <Button
+                Grid.Row="0"
                 Grid.Column="1"
-                Padding="35 5"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{Binding BackCommand}"/>
+                VerticalAlignment="Center"
+                Style="{DynamicResource ButtonEmpty}"
+                Command="{Binding BackCommand}">
+            <Image Height="50" Source="{DynamicResource Back}"/>
+        </Button>
         
         <Button Content="Оформить заказ" 
                 Grid.Row="3"
@@ -218,7 +234,7 @@
                 Padding="45 7"
                 
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 Command="{Binding NextCommand}"/>
 
         <Rectangle Visibility="{Binding IsPromtVisible, Converter={StaticResource BoolToVis}}" 
@@ -226,24 +242,27 @@
         <Border 
             Visibility="{Binding IsPromtVisible, Converter={StaticResource BoolToVis}}" 
             Margin="15 25"
+            HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Background="White"
             BorderBrush="White"
             CornerRadius="3" 
             BorderThickness="4"
                 Grid.Column="1"
-                Grid.Row="2" Padding="25 5">
+                Grid.Row="2" Padding="35 10">
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Button Content="X" HorizontalAlignment="Right"
+                <Button HorizontalAlignment="Right"
                         Padding="10 5"
                         Command="{Binding ClosePrompt}"
                         Style="{DynamicResource ButtonEmpty}"
-                        VerticalAlignment="Top" Margin="-25 -5"/>
+                        VerticalAlignment="Top" Margin="-25 -5">
+                    <Image Source="{DynamicResource Close}" Height="20"/>
+                </Button>
 
                 <TextBlock Text="Добавить услугу" 
                            HorizontalAlignment="Center"
@@ -255,7 +274,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
 
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <StackPanel Margin="0 7" HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Width="250" Text="{Binding Name}" Style="{DynamicResource TextBlock_H3}"/>
                                 <TextBlock Width="150" HorizontalAlignment="Right" 
                                                Text="{Binding Cost}" 
@@ -267,6 +286,7 @@
                                 <Button     Content="Добавить"
                                                 Style="{DynamicResource LinkButton}"
                                             Padding="15 2"
+                                            FontSize="15"
                                             Grid.Column="1"
                                             HorizontalAlignment="Right"
                                             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
