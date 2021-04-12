@@ -22,7 +22,9 @@
             <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Style="{DynamicResource TextBlock_H1}" Margin="15 15" Grid.Column="1" Text="Заполните данные"/>
+        <TextBlock Style="{DynamicResource TextBlock_H1}"
+                   VerticalAlignment="Center"
+                   Margin="75 0" Grid.Column="1" Text="Заполните данные"/>
 
         <Grid 
             HorizontalAlignment="Center" 
@@ -61,10 +63,10 @@
                 <TextBox Text="{Binding ProfileDto.Login}" Visibility="{Binding ElementName=cbReg, Path=IsChecked, Converter={StaticResource BoolToVis}}"
                          FontSize="15" 
                     Margin="0 15"/>
-                <TextBox 
-                    Text="{Binding ProfileDto.Password}"
+                <ContentControl 
+                    Content="{Binding PasswordBox}"
                     Visibility="{Binding ElementName=cbReg, Path=IsChecked, Converter={StaticResource BoolToVis}}"
-                    FontSize="15"  />
+                    TextBlock.FontSize="15"  />
             </StackPanel>
 
             <CheckBox 
@@ -86,13 +88,13 @@
         </Grid>
 
         <Button               
-                Grid.Row="3"
+                Grid.Row="0"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 Style="{DynamicResource ButtonEmpty}"
                 Command="{Binding BackCommand}">
-            <Image Source="{DynamicResource Back}" Height="55"/>
+            <Image Source="{DynamicResource Back}" Height="50"/>
         </Button>
 
         <Button Content="Продолжить" 
@@ -101,7 +103,7 @@
                 FontSize="16"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Padding="45 7"
+                Padding="50 7"
                 
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"

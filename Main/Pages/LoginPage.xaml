@@ -11,16 +11,28 @@
 
     <Grid>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="12*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
 
 
+        <TextBlock 
+            Text="Авторизация" 
+            Grid.Row="0" 
+            VerticalAlignment="Center"
+            Margin="75 0"
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_H1}"/>
 
-        
 
-        <StackPanel  Grid.Row="1" Width="400" HorizontalAlignment="Center">
+        <StackPanel  
+            Grid.Column="1"
+            Grid.Row="1" Width="400" HorizontalAlignment="Center">
 
 
             <StackPanel Margin="0 5">
@@ -66,16 +78,15 @@
 
         </StackPanel>
 
-        <Button 
-                    Margin="45 25"  
+        <Button  
                     FontSize="14"
-                    FontFamily="Trebuchet MS"
+                    Grid.Column="1"
                     Style="{StaticResource ButtonEmpty}"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    Grid.Row="0"
+            HorizontalAlignment="Left"
                     Command="{Binding BackCommand}">
-            <Image Source="{DynamicResource Back}" Height="55"/>
+            <Image Source="{DynamicResource Back}" Height="50"/>
         </Button>
 
     </Grid>

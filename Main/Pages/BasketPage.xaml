@@ -56,6 +56,7 @@
                                 <DataTemplate >
                                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                         <RepeatButton 
+                                            x:Name="decr"
                                             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
                                             Command="{Binding MinusCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=DataContext}"                                            
@@ -72,6 +73,7 @@
 
 
                                         <RepeatButton 
+                                            x:Name="incr"
                                             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
                                             Command="{Binding PlusCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=DataContext}"
@@ -79,6 +81,9 @@
                                             Padding="10 5"
                                             Style="{DynamicResource RepeatButtonEmpty}"
                                             Margin="5" />
+                                        
+                                        
+                                        
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -117,14 +122,14 @@
                 <StackPanel HorizontalAlignment="Left">
 
                     <TextBlock Style="{DynamicResource TextBlock_H3}" Text="Общая стоиомость: "/>
-                    <TextBlock Style="{DynamicResource TextBlock_H3}" Margin="0 5" Text="Общая скидка: "/>
+                    <TextBlock Style="{DynamicResource TextBlock_H3}" Margin="0 8" Text="Общая скидка: "/>
                     <TextBlock Margin="0 5" FontSize="19"  Style="{DynamicResource TextBlock_H3}" Text="Итоговая стоиомость: "/>
                 </StackPanel>
 
                 <StackPanel HorizontalAlignment="Right" Grid.Column="1">
 
                     <TextBlock Style="{DynamicResource TextBlock_H3_DemiBold}" Grid.Column="1" Text="{Binding CommonCost, StringFormat='{}{0} р.'}"/>
-                    <TextBlock Style="{DynamicResource TextBlock_H3_DemiBold}" Margin="0 5" Grid.Column="1" Text="{Binding CommonSaleValute, StringFormat='{}{0} р.'}"/>
+                    <TextBlock Style="{DynamicResource TextBlock_H3_DemiBold}" Margin="0 8" Grid.Column="1" Text="{Binding CommonSaleValute, StringFormat='{}{0} р.'}"/>
                     <TextBlock Margin="0 5" FontSize="19" Style="{DynamicResource TextBlock_H3_DemiBold}" Grid.Column="1" Text="{Binding FinalCost, StringFormat='{}{0} р.'}"/>
                 </StackPanel>
 

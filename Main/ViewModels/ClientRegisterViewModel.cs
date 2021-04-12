@@ -1,6 +1,7 @@
 ﻿using BL;
 using DAL.Dto;
 using MVVM_Core;
+using System.Windows.Controls;
 
 namespace Main.ViewModels
 {
@@ -21,6 +22,8 @@ namespace Main.ViewModels
             Init();
         }
 
+        public PasswordBox PasswordBox { get; set; } = new PasswordBox();
+
         public bool IsProfileRegister { get; set; }
         
         void Init()
@@ -34,6 +37,8 @@ namespace Main.ViewModels
         {
             IsErrorVisible = false;
             registerService.SetupClient(ClientDto);
+
+            ProfileDto.Password = PasswordBox.Password;
 
             if (IsProfileRegister && !(await registerService.SetupProfile(ProfileDto)))
             {

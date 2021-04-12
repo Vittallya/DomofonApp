@@ -88,6 +88,7 @@ namespace Main.ViewModels
             IsLoading = true;
             IsAutorized = userService.IsAutorized;
             ClientName = userService.CurrentUser?.Name;
+            eventBus.Describe<Events.ClientRegistered, CatalogViewModel>();
             await Reload();
         }
 

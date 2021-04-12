@@ -33,7 +33,7 @@ namespace Main.ViewModels
 
         protected override async void Back()
         {
-            await Update();
+            await basketService.SetupFilledProducts(OrderedProducts);
             pageservice.ClearHistoryByPool(PoolIndex);
             pageservice.ChangePage<Pages.CatalogPage>(PoolIndex, DisappearAnimation.Default);
         }

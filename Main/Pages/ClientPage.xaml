@@ -132,17 +132,19 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0 5" Orientation="Horizontal">
-                                    <TextBlock Width="180"
+                                    <TextBlock
+                                               MinWidth="290"
                                                FontStyle="Italic"
                                                Style="{DynamicResource TextBlock_H3}" 
                                                Text="{Binding ProductDto.Name}"/>
 
-                                    <TextBlock Width="110"
+                                    <TextBlock Margin="45 0 0 0"
+                                               MinWidth="170"
                                                FontStyle="Italic"
                                                Style="{DynamicResource TextBlock_H3}" 
                                                Text="{Binding ProductDto.Manufacturer}"/>
 
-                                    <TextBlock Width="70"
+                                    <TextBlock Width="120"
                                                Style="{DynamicResource TextBlock_H3}"
                                                FontStyle="Italic"
                                                Text="{Binding Count, StringFormat='{}{0} шт.'}"/>
@@ -166,7 +168,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0 5" Orientation="Horizontal">
-                                    <TextBlock Width="190" 
+                                    <TextBlock MinWidth="220" 
                                                FontStyle="Italic"
                                                Style="{DynamicResource TextBlock_H3}" Text="{Binding Name}"/>
                                     <TextBlock Width="110"

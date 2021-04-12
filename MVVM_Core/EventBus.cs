@@ -33,6 +33,18 @@ namespace MVVM_Core
             return disposableObj;
         }
 
+        public void Describe<T, TSub>() where T : IEvent
+        {
+            var same = subscribers.Keys.FirstOrDefault(x => x.MesType == typeof(T) && x.Sub == typeof(TSub));
+
+            if (same == null)
+            {
+                return;
+            }
+
+            same.Dispose();
+        }
+
         public async Task Publish<T>(T message) where T: IEvent
         {
             var messType = message.GetType();
