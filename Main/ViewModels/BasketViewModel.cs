@@ -31,7 +31,7 @@ namespace Main.ViewModels
         public bool IsPromtVisible { get; set; }
 
 
-        protected override async void Back()
+        protected override async void Back(object p)
         {
             await basketService.SetupFilledProducts(OrderedProducts);
             pageservice.ClearHistoryByPool(PoolIndex);
@@ -84,12 +84,14 @@ namespace Main.ViewModels
 
         async Task Update()
         {
+            _isUpdate = true;
             await Calculate();
             await basketService.SetupFilledProducts(OrderedProducts);
             await servicesService.SetupUsedServices(IncludedServices);
+            _isUpdate = false;
         }
 
-        protected override async void Next()
+        protected override async void Next(object p)
         {
             await orderService.SetupData(OrderedProducts, IncludedServices, FinalCost);
             if (userService.IsAutorized)
@@ -126,7 +128,7 @@ namespace Main.ViewModels
             timer.TimerCompletedAsync += async () => await Update();
         }
 
-        
+        private bool _isUpdate;
 
         public OrderedProductDto Selected { get; set; }
 
@@ -179,7 +181,7 @@ namespace Main.ViewModels
                 timer.Reset();
 
             }
-        });
+        }, y=> !_isUpdate);
 
         public ICommand PlusCommand => new Command(x =>
         {
@@ -192,7 +194,7 @@ namespace Main.ViewModels
                     timer.StartTimer();
                 timer.Reset();
             }
-        });
+        }, y => !_isUpdate);
 
 
         public override int PoolIndex => Rules.Pages.MainPool;

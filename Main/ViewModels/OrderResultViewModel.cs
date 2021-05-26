@@ -8,7 +8,6 @@ namespace Main.ViewModels
         private readonly OrderService orderService;
         private readonly BasketService basketService;
         private readonly ServicesService servicesService;
-        private readonly UserService userService;
 
         public OrderResultViewModel(PageService pageservice, 
             OrderService orderService, BasketService basketService, ServicesService servicesService) : base(pageservice)
@@ -27,12 +26,13 @@ namespace Main.ViewModels
             Message = res ? "Заказ успешно оформлен! Наш менеджер свяжется с Вами в ближайшее время." : orderService.ErrorMessage;
             basketService.Clear();
             servicesService.Clear();
+            pageservice.ClearAllPools();
         }
 
 
-        protected override void Next()
+        protected override void Next(object p)
         {
-            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
+            pageservice.ChangePage<Pages.CatalogPage>(PoolIndex, DisappearAnimation.Default);
         }
 
         public override int PoolIndex => Rules.Pages.MainPool;

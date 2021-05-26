@@ -23,9 +23,14 @@ namespace MVVM_Core
         }
         public void ChangePage<TPage>(int poolIndex, ISliderAnimation anim) where TPage: Page, new()
         {
+            TPage page = AddToHistory<TPage>(poolIndex);
+            OnChangePage(page, anim);
+        }
 
-            Page page = null;
-            
+        private TPage AddToHistory<TPage>(int poolIndex) where TPage : Page, new()
+        {
+            TPage page = null;
+
             bool isExist = false;
             bool other = poolIndex != ActualPool;
             bool poolContains = _pool.ContainsKey(poolIndex);
@@ -37,7 +42,7 @@ namespace MVVM_Core
 
                 if (hasSame)
                 {
-                    page = _pool[poolIndex].FirstOrDefault(x => x.GetType() == typeof(TPage));
+                    page = _pool[poolIndex].FirstOrDefault(x => x.GetType() == typeof(TPage)) as TPage;
                     isExist = true;
                 }
             }
@@ -46,7 +51,7 @@ namespace MVVM_Core
                 _poolHistory.Add(poolIndex);
 
 
-            if(!isExist)
+            if (!isExist)
             {
                 page = new TPage();
                 if (!poolContains)
@@ -57,8 +62,11 @@ namespace MVVM_Core
 
             }
 
-            OnChangePage(page, anim);
+            return page;
         }
+
+        private Action<int> nextInvoker;
+
         public void OnChangePage<TPage>(TPage target, ISliderAnimation anim) where TPage : Page, new()
         {
             PageChanged?.Invoke(target, anim);
@@ -118,6 +126,17 @@ namespace MVVM_Core
             }
         }
         #endregion
+
+        public void SetupNext<TPage>(ISliderAnimation animation) where TPage : Page, new()
+        {
+            nextInvoker = pool => ChangePage<TPage>(pool, animation);
+        }
+
+        public void Next(int pool)
+        {
+            nextInvoker?.Invoke(pool);
+        }
+
 
         List<Page> _history = new List<Page>();
 

@@ -33,7 +33,7 @@ namespace Main.ViewModels
             IsProfileRegister = IsRegisterRequiered;
         }
 
-        protected override async void Next()
+        protected override async void Next(object p)
         {
             IsErrorVisible = false;
             registerService.SetupClient(ClientDto);

@@ -101,7 +101,7 @@ namespace Main.ViewModels
         public ICommand LogoutCommand => new Command(x =>
         {
             userService.Logout();
-            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
+            pageservice.ReloadCurrentPage(PoolIndex, DisappearAnimation.Default);
         });
 
         private async Task OnEntered(AccountEntered arg)

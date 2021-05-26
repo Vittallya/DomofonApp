@@ -68,7 +68,7 @@ namespace Main.ViewModels
             }
         });
 
-        protected override void Back()
+        protected override void Back(object p)
         {
             pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
         }
