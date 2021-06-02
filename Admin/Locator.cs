@@ -24,6 +24,11 @@ namespace Admin
             _itemsViewModelTypeGetter = () => ServiceProvider.GetRequiredService<TViewModel>() as IItemsViewModel;            
         }
 
+        public static void SetItemsViewModel(Type vmType)
+        {
+            _itemsViewModelTypeGetter = () => ServiceProvider.GetRequiredService(vmType) as IItemsViewModel;
+        }
+
         public static void SetDetailsViewModel<TModel>() where TModel: class
         {
             _detailViewModelTypeGetter = () => ServiceProvider.GetService<EditItemViewModel<TModel>>();            

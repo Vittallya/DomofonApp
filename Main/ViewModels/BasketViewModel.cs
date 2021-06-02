@@ -1,6 +1,7 @@
 ﻿using BL;
 using DAL.Dto;
 using DAL.Models;
+using Main.Events;
 using MVVM_Core;
 using System;
 using System.Collections.ObjectModel;
@@ -34,11 +35,10 @@ namespace Main.ViewModels
         protected override async void Back(object p)
         {
             await basketService.SetupFilledProducts(OrderedProducts);
-            pageservice.ClearHistoryByPool(PoolIndex);
-            pageservice.ChangePage<Pages.CatalogPage>(PoolIndex, DisappearAnimation.Default);
+            pageservice.Back<Pages.CatalogPage>(BackSlideAnim, true);
         }
 
-        public BasketViewModel(PageService pageservice, BasketService basketService, 
+        public BasketViewModel(PageManager pageservice, BasketService basketService, 
             CatalogService catalogService, ServicesService servicesService, 
             OrderService orderService, UserService userService, EventBus eventBus) : base(pageservice)
         {
@@ -94,21 +94,33 @@ namespace Main.ViewModels
         protected override async void Next(object p)
         {
             await orderService.SetupData(OrderedProducts, IncludedServices, FinalCost);
+
             if (userService.IsAutorized)
             {
                 await OnRegister(new Events.ClientRegistered(userService.CurrentUser));
+                pageservice.ChangeNewPage<Pages.OrderResultPage>(DisappearAnimation.Default);
             }
             else
             {
-                pageservice.ChangePage<Pages.ClientRegisterPage>(PoolIndex, DisappearAnimation.Default);
+
+                pageservice.SetupNext<Pages.ClientRegisterPage, Pages.OrderResultPage>(DisappearAnimation.Default);
+                pageservice.SetupNext<Pages.LoginPage, Pages.OrderResultPage>(DisappearAnimation.Default);
                 eventBus.Subscribe<Events.ClientRegistered, BaseViewModel>(OnRegister);
+                eventBus.Subscribe<Events.AccountEntered, BaseViewModel>(OnEnter);
+                pageservice.ChangeNewPage<Pages.ClientRegisterPage>(DisappearAnimation.Default);
             }
         }
 
-        async Task OnRegister(Events.ClientRegistered obj)
+        private async Task OnEnter(AccountEntered arg)
         {
-            orderService.SetupClient(obj.User.Id);
-            pageservice.ChangePage<Pages.OrderResultPage>(DisappearAnimation.Default);
+            orderService.SetupClient(arg.Id);
+            eventBus.Describe<Events.ClientRegistered, BaseViewModel>();
+        }
+
+        private async Task OnRegister(ClientRegistered arg)
+        {
+            orderService.SetupClient(arg.User.Id);
+            eventBus.Describe<Events.AccountEntered, BaseViewModel>();
         }
 
 

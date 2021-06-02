@@ -69,13 +69,24 @@
                     TextBlock.FontSize="15"  />
             </StackPanel>
 
-            <CheckBox 
+            <DockPanel Grid.Row="1" Margin="0 5"
+                Grid.ColumnSpan="2">
+
+                <CheckBox
+                    DockPanel.Dock="Top"
                 Visibility="{Binding IsRegisterRequiered, Converter={StaticResource BoolToVisInvert}}"
                 IsChecked="{Binding IsProfileRegister}"
-                Grid.ColumnSpan="2"
                 x:Name="cbReg"
-                Content="Зарегистрироваться в системе" FontSize="15" Grid.Row="1" Margin="0 10"/>
+                Content="Зарегистрироваться в системе" FontSize="15" Margin="0 15"/>
 
+                
+                <TextBlock VerticalAlignment="Center" Text="Уже есть учетная запись?" Style="{DynamicResource TextBlock_H4}"/>
+                <Button 
+                    VerticalAlignment="Center"
+                    Margin="10 0 0 0" Style="{DynamicResource LinkButton}" Content="Авторизоваться" FontSize="15"/>
+            </DockPanel>
+            
+            
             <TextBlock 
                 Grid.Row="2"
                 Grid.ColumnSpan="2"

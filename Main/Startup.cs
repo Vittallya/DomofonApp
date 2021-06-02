@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BL;
 using DAL;
+using BL.Admin;
 
 namespace Main
 {
@@ -14,6 +15,7 @@ namespace Main
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<AllDbContext>();
+            services.AddTransient<AdminService>();
             services.AddTransient<DbContextLoader>();
             services.AddTransient<LoginService>();
             services.AddTransient<MapperService>();

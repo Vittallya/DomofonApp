@@ -13,9 +13,14 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         
 
         <TextBlock
+            Grid.RowSpan="2"
             Grid.ColumnSpan="2"
             Visibility="{Binding LoadingContext, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Загрузка бд..." RenderTransformOrigin="0.5,0.5">
             <TextBlock.Style>
@@ -52,48 +57,36 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <StackPanel 
-            Visibility="{Binding LoadingContext, Converter={StaticResource BooltoVisInvert}}"
-            Margin="25 20">
+
+        <ItemsControl 
+                ItemsSource="{Binding Tables}"
+                Grid.RowSpan="2"
+                Visibility="{Binding LoadingContext, Converter={StaticResource BoolToVisInvert}}"
+                Margin="25 20">
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0 7">
+                        <Button 
+                            Style="{DynamicResource LinkButton}"
+                            Content="{Binding DataContext.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}}"
+                            DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext}"
+                            Command="{Binding SelectTable}"
+                            CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}}"
+                            FontSize="15"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
 
-            <RadioButton 
-                Command="{Binding AutosCommand}"
-                Margin="0 10" 
-                FontSize="14"
-                Content="Автомобили"/>
+        <TextBlock Text="{Binding TableName, StringFormat='{}Таблица: {0}'}" 
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Center"
+                   FontSize="21"/>
 
-
-            <RadioButton 
-                Command="{Binding EvacCommand}"
-                Margin="0 10" 
-                FontSize="14"
-                Content="Эвакуации"/>
-
-
-            <RadioButton 
-                Command="{Binding ParkingCommand}"
-                Margin="0 10" 
-                FontSize="14"
-                Content="Парковки"/>
-
-
-            <RadioButton 
-                Command="{Binding FinesCommand}"
-                Margin="0 10" 
-                FontSize="14"
-                Content="Нарушения"/>
-
-
-            <RadioButton 
-                Command="{Binding DeclarationCommand}"
-                Margin="0 10" 
-                FontSize="14"
-                Content="Заявления"/>
-
-        </StackPanel>
-
-        <Frame NavigationUIVisibility="Hidden" Grid.Column="1" Content="{Binding CurrentPage}"/>
-        <Rectangle Grid.ColumnSpan="2" Fill="White"/>
+        <Frame 
+            Grid.Row="1"
+            NavigationUIVisibility="Hidden" Grid.Column="1" Content="{Binding CurrentPage}"/>
     </Grid>
 </Window>

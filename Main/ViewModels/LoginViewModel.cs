@@ -9,13 +9,11 @@ namespace Main.ViewModels
     public class LoginViewModel : BasePageViewModel
     {
         private readonly LoginService loginService;
-        private readonly PageService pageService;
         private readonly EventBus eventBus;
 
-        public LoginViewModel(LoginService loginService, PageService pageService, EventBus eventBus) : base(pageService)
+        public LoginViewModel(LoginService loginService, PageManager pageService, EventBus eventBus) : base(pageService)
         {
             this.loginService = loginService;
-            this.pageService = pageService;
             this.eventBus = eventBus;
         }
         public bool IsErrorVisible { get; set; }
@@ -32,9 +30,16 @@ namespace Main.ViewModels
         {
             IsErrorVisible = false;
 
-            if(await loginService.Login(Login, PasswordBox.Password))
+            var id = await loginService.Login(Login, PasswordBox.Password);
+
+            if (id > -1)
             {
-                await eventBus.Publish(new Events.AccountEntered());
+                await eventBus.Publish(new Events.AccountEntered(id));
+
+                if (!pageservice.Next())
+                {
+                    pageservice.Back(BackSlideAnim, true);
+                }
             }
             else
             {

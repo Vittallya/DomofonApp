@@ -25,10 +25,10 @@ namespace BL
                 Import.CloseHandle(pipeHandle);
         }
 
-        public void Init()
+        public void Init(string serverName)
         {
             pipeHandle = Import.CreateNamedPipe(
-                "\\\\.\\pipe\\ParkingFinePipe",
+                $"\\\\.\\pipe\\{serverName}",
                 Types.PIPE_ACCESS_DUPLEX,
                 Types.PIPE_TYPE_BYTE,
                 Types.PIPE_UNLIMITED_INSTANCES,
@@ -45,9 +45,11 @@ namespace BL
 
         public void Send(string message)
         {
-            temp = count;
+            _send = true;
             _message = Encoding.Unicode.GetBytes(message);
         }
+
+        bool _send;
 
         int temp = 0;
 
@@ -58,33 +60,23 @@ namespace BL
 
             while (_cont)
             {
-                
-
                 if (Import.ConnectNamedPipe(pipeHandle, 0))
                 {
-
-                    byte[] buffRead = new byte[1];
-                    uint realBytesReaded = 0; 
-
-                    if (Import.ReadFile(pipeHandle, buffRead, (uint)buffRead.Length, ref realBytesReaded, 0) && realBytesReaded != 0)
-                    {
-                        count++;
-                    }
 
                     byte[] buffWrite = new byte[] { 0 };
                     uint realBytesWrited = 0;
 
-                    if (temp > 0)
+                    if (_send)
                     {
                         buffWrite = _message;
-                        temp--;
+                        _send = false;
                     }
 
 
                     Import.WriteFile(pipeHandle, buffWrite, (uint)buffWrite.Length, ref realBytesWrited, 0);
 
 
-                    Import.DisconnectNamedPipe(pipeHandle);                             // отключаемся от канала клиента 
+                    Import.DisconnectNamedPipe(pipeHandle);
 
                     // приостанавливаем работу потока перед тем, как приcтупить к обслуживанию очередного клиента
                 }

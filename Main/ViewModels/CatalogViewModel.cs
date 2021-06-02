@@ -24,7 +24,7 @@ namespace Main.ViewModels
 
         public bool IsLoading { get; set; }
 
-        public CatalogViewModel(PageService pageservice, BL.CatalogService catalogService, 
+        public CatalogViewModel(PageManager pageservice, BL.CatalogService catalogService, 
             EventBus eventBus, BasketService basketService, UserService userService, RegisterService registerService) : base(pageservice)
         {
             this.catalogService = catalogService;
@@ -75,7 +75,7 @@ namespace Main.ViewModels
 
         public ICommand ToBasket => new Command(x =>
         {
-            pageservice.ChangePage<Pages.BasketPage>(PoolIndex, DisappearAnimation.Default);
+            pageservice.ChangeNewPage<Pages.BasketPage>(DisappearAnimation.Default);
         });
 
 
@@ -94,37 +94,36 @@ namespace Main.ViewModels
 
         public ICommand ToLogin => new Command(x =>
         {
-            pageservice.ChangePage<Pages.LoginPage>(PoolIndex, DisappearAnimation.Default);
-            eventBus.Subscribe<Events.AccountEntered, CatalogViewModel>(OnEntered);
+            pageservice.ChangeNewPage<Pages.LoginPage>(DisappearAnimation.Default);
+            pageservice.SetupNext<Pages.LoginPage, Pages.CatalogPage>(BackSlideAnim);
+        });
+
+        public ICommand ToLoginAdmin => new Command(x =>
+        {
+            pageservice.ChangeNewPage<Pages.LoginAdminPage>(DisappearAnimation.Default);
         });
 
         public ICommand LogoutCommand => new Command(x =>
         {
             userService.Logout();
-            pageservice.ReloadCurrentPage(PoolIndex, DisappearAnimation.Default);
+            pageservice.ReloadCurrentPage(DisappearAnimation.Default);
         });
 
-        private async Task OnEntered(AccountEntered arg)
-        {
-            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
-        }
+
+
 
         public ICommand ToRegister => new Command(x =>
         {
             registerService.IsRegisterRequiered = true;
-            pageservice.ChangePage<Pages.ClientRegisterPage>(PoolIndex, DisappearAnimation.Default);
-            eventBus.Subscribe<Events.ClientRegistered, CatalogViewModel>(OnRegistered);
+            pageservice.SetupNext<Pages.ClientRegisterPage, Pages.CatalogPage>(BackSlideAnim);
+            pageservice.SetupNext<Pages.LoginPage, Pages.CatalogPage>(BackSlideAnim);
+            pageservice.ChangeNewPage<Pages.ClientRegisterPage>(DisappearAnimation.Default);
         });
 
         public ICommand ToProfileView => new Command(x =>
         {
-            pageservice.ChangePage<Pages.ClientPage>(DisappearAnimation.Default);
+            pageservice.ChangeNewPage<Pages.ClientPage>(DisappearAnimation.Default);
         });
-
-        private async Task OnRegistered(ClientRegistered arg)
-        {
-            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
-        }
 
         async Task Reload()
         {

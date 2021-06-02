@@ -15,7 +15,7 @@ namespace Main.ViewModels
     
     public class MainViewModel : BaseSliderViewModel
     {
-        private readonly PageService pageService;
+        private readonly PageManager pageService;
         private readonly DbContextLoader contextLoader;
         private readonly ClientPipeHanlder pipeHanlder;
         private readonly EventBus eventBus;
@@ -27,7 +27,7 @@ namespace Main.ViewModels
         public string ErrorMessage { get; set; }
         public string ErrorMessageDetail { get; set; }
 
-        public MainViewModel(PageService pageService, 
+        public MainViewModel(PageManager pageService, 
             DbContextLoader contextLoader, 
             ClientPipeHanlder pipeHanlder, 
             EventBus eventBus,
@@ -48,7 +48,7 @@ namespace Main.ViewModels
 
         async void Init()
         {
-            pipeHanlder.Init();
+            pipeHanlder.Init("DomofonApp");
             pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
 
             IsLoaded = await contextLoader.LoadAsync<Product>();
@@ -56,7 +56,7 @@ namespace Main.ViewModels
 
             if (IsLoaded)
             {
-                pageService.ChangePage<Pages.CatalogPage>(Rules.Pages.MainPool, defaultAnim);
+                pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
             }
             else
             {

@@ -248,13 +248,14 @@
             Visibility="{Binding IsPromtVisible, Converter={StaticResource BoolToVis}}" 
             Margin="15 25"
             HorizontalAlignment="Center"
-            VerticalAlignment="Top"
+            VerticalAlignment="Center"
             Background="White"
             BorderBrush="White"
             CornerRadius="3" 
             BorderThickness="4"
-                Grid.Column="1"
-                Grid.Row="2" Padding="35 10">
+            Grid.ColumnSpan="3"
+            Grid.RowSpan="3"
+            Padding="35 10">
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>

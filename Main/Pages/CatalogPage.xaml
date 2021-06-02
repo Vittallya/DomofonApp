@@ -17,11 +17,24 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+
+            <Button 
+                Style="{DynamicResource LinkButton}"
+                Command="{Binding ToLoginAdmin}"
+                FontSize="15"
+                Content="Войти от имени администратора"
+                VerticalAlignment="Center" />
+
+
+        </StackPanel>
+        
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
 
             <Button 
                 Style="{DynamicResource ButtonEmpty}"
@@ -45,12 +58,12 @@
         </StackPanel>
 
         <StackPanel 
+            Grid.Column="1"
             Orientation="Horizontal"
             
             Visibility="{Binding IsAutorized, Converter={StaticResource BoolToVis}}"
             HorizontalAlignment="Right" 
-            VerticalAlignment="Center" 
-            Margin="0 0 25 0">
+            VerticalAlignment="Center" >
 
             <Menu>
                 <MenuItem>
@@ -64,12 +77,12 @@
         </StackPanel>
 
         <StackPanel 
+            Grid.Column="1"
             TextBlock.FontSize="14"
             Orientation="Horizontal"
             Visibility="{Binding IsAutorized, Converter={StaticResource BoolToVisInvert}}"
             HorizontalAlignment="Right" 
-            VerticalAlignment="Center" 
-            Margin="0 0 25 0">
+            VerticalAlignment="Center" >
             <Button Command="{Binding ToLogin}" Content="Войти" Style="{DynamicResource LinkButton}"/>
             <Button Command="{Binding ToRegister}" Margin="25 0 0 0" Content="Регистрация" Style="{DynamicResource LinkButton}"/>
         </StackPanel>
@@ -77,6 +90,8 @@
         <ScrollViewer
             Grid.Row="1"
             Margin="25 0"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled">
         <ItemsControl 

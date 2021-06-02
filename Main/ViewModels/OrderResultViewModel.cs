@@ -9,7 +9,7 @@ namespace Main.ViewModels
         private readonly BasketService basketService;
         private readonly ServicesService servicesService;
 
-        public OrderResultViewModel(PageService pageservice, 
+        public OrderResultViewModel(PageManager pageservice, 
             OrderService orderService, BasketService basketService, ServicesService servicesService) : base(pageservice)
         {
             this.orderService = orderService;
@@ -21,18 +21,17 @@ namespace Main.ViewModels
         public string Message { get; set; }
 
         async void Init()
-        {
+        {            
             bool res = await orderService.ApplyOrder();
             Message = res ? "Заказ успешно оформлен! Наш менеджер свяжется с Вами в ближайшее время." : orderService.ErrorMessage;
             basketService.Clear();
             servicesService.Clear();
-            pageservice.ClearAllPools();
         }
 
 
         protected override void Next(object p)
         {
-            pageservice.ChangePage<Pages.CatalogPage>(PoolIndex, DisappearAnimation.Default);
+            pageservice.ClearHistoryAndChangeTo<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
         public override int PoolIndex => Rules.Pages.MainPool;

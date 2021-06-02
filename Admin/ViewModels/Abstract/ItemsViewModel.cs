@@ -16,6 +16,7 @@ using System.Data.Entity;
 using Admin.Components;
 using System.Reflection;
 using Admin.Events;
+using Admin.Core;
 
 namespace Admin.ViewModels
 {
@@ -27,25 +28,28 @@ namespace Admin.ViewModels
         protected readonly CloneItemsSerivce cloneItems;
         protected readonly EventBus eventBus;
         PropertyInfo idProp = typeof(T).GetProperty("Id");
-
-
-        protected bool isAutoGenerate = false;
+        private ColumnBuilder<T> _columnBuilder = new ColumnBuilder<T>();
+        private PropertiesBuilder<T> _propBuilder = new PropertiesBuilder<T>();
 
         public virtual async Task<bool> CheckBeforeAdd(T item)
         {
             return true;
         }
 
+        protected virtual void OnColumnsBuild(ColumnBuilder<T> columnBuilder)
+        {            
+            columnBuilder.AutoGenerate();
+        }
+
+        protected virtual void OnPropertiesBuild(PropertiesBuilder<T> propertiesBuilder)
+        {
+            propertiesBuilder.AutoGenerate();
+        }
         protected virtual async Task OnEdit()
         {
 
         }
         protected virtual async Task OnAdd()
-        {
-
-        }
-
-        protected virtual void GenerateBindingList()
         {
 
         }
@@ -67,27 +71,53 @@ namespace Admin.ViewModels
 
         async void Init()
         {
-            GenerateBindingVIew();
-
-            if (fieldsGenerator.IsLastDetail)
+            bool dataError = false;
+            while (true)
             {
-                await FromDetailsPage(fieldsGenerator.IsEdit, fieldsGenerator.Item as T);
-                fieldsGenerator.Clear();
-            }
-            await LoadItems();
+                try
+                {
+                    GenerateBindingView();
+                    GenerateProperties();
 
-            if (isAutoGenerate)
-            {
-                GenerateBindingList();
-            }
+                    if (fieldsGenerator.IsLastDetail)
+                    {
+                        if(!dataError)
+                            await FromDetailsPage(fieldsGenerator.IsEdit, fieldsGenerator.Item as T);
+                    }
 
+                    await LoadItems();
+                    
+                    break;
+                }
+                catch (NotSupportedException) 
+                {  
+                    await Task.Delay(500); 
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    if(ex.InnerException != null)
+                        MessageBox.Show(ex.InnerException.Message);
+                    dataError = true;
+                }
+                finally
+                {
+                    fieldsGenerator.Clear();
+                }
+            }
         }
 
-        private void GenerateBindingVIew()
+        private void GenerateProperties()
         {
-            var list = BindingList.
-                Where(x => x.PropertyType != PropertyType.OuterPropertyIdNonVisible).
-                ToList();
+            _propBuilder.Clear();
+            OnPropertiesBuild(_propBuilder);
+        }
+
+        private void GenerateBindingView()
+        {
+            _columnBuilder.Clear();
+            OnColumnsBuild(_columnBuilder);
+            var list = _columnBuilder.GetColumns();
 
             GridView.Columns.Clear();
             foreach (var bind in list)
@@ -95,7 +125,7 @@ namespace Admin.ViewModels
                 GridViewColumn item = new GridViewColumn();
 
                 item.DisplayMemberBinding = new Binding(bind.BindingPath);
-                item.Header = bind.DisplayName;
+                item.Header = bind.ColumnName;
                 GridView.Columns.Add(item);
             }
         }
@@ -121,10 +151,7 @@ namespace Admin.ViewModels
         protected async Task Edit(T item)
         {
             var id = idProp.GetValue(item);
-            T copy = await dbContext.Set<T>().FindAsync(id);
-
-            cloneItems.Clone(item, copy);
-            dbContext.Entry<T>(copy).State = EntityState.Modified;
+            dbContext.Entry<T>(item).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
             await OnEdit();
             await OnDbChanged(id);
@@ -165,6 +192,9 @@ namespace Admin.ViewModels
 
         protected virtual async Task FromDetailsPage(bool isEdit, T item)
         {
+            if (item == null)
+                return;
+
             if (isEdit)
             {
                 await Edit(item);
@@ -175,11 +205,26 @@ namespace Admin.ViewModels
             }
         }
 
-        protected virtual async void ToDetailsPage(bool isEdit)
-        {
-            T item = isEdit ? SelectedItem : new T();
+        protected virtual void OnSetDefaults(T item) { }
 
-            await fieldsGenerator.Generate(item, BindingList, isEdit);
+        protected virtual void ToDetailsPage(bool isEdit)
+        {
+
+            if (!isEdit)
+            {
+                T item = new T();
+                OnSetDefaults(item);
+                fieldsGenerator.SetItem(item);
+            }
+            else
+            {
+                T copy = new T();
+                cloneItems.Clone(SelectedItem, copy);
+                fieldsGenerator.SetItem(copy);
+            }
+
+            fieldsGenerator.SetupControls(_propBuilder.PropertyControls, isEdit);
+
             Locator.SetDetailsViewModel<T>();
             pageservice.ChangePage<Pages.ItemDetailPage>(PoolIndex, DisappearAndToSlideAnim.ToLeft);
         }
@@ -188,7 +233,5 @@ namespace Admin.ViewModels
         public GridView GridView { get; set; } = new GridView();
 
         public StackPanel StackPanel { get; set; } = new StackPanel();
-
-        public abstract BindingComponent[] BindingList { get; }
     }
 }

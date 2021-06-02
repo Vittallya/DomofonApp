@@ -10,7 +10,7 @@ namespace DAL
     {        
 
 
-        public AllDbContext():base("DomofonDb")
+        public AllDbContext():base("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=DomofonDb;Integrated Security=True")
         {
             
         }

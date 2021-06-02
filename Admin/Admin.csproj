@@ -73,7 +73,30 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\BindingComponent.cs" />
+    <Compile Include="Core\BindingBuilder.cs" />
+    <Compile Include="Core\Helper.cs" />
+    <Compile Include="Core\Interfaces\IBinidingBuilder.cs" />
+    <Compile Include="Core\Interfaces\IPropertyControl.cs" />
+    <Compile Include="Core\Interfaces\IRulesCollection.cs" />
+    <Compile Include="Core\PropertyBuilder.cs" />
+    <Compile Include="Core\Validation\Base\IValidPropertyBase.cs" />
+    <Compile Include="Core\Validation\Base\IValueTypeValidRule.cs" />
+    <Compile Include="Core\PropertiesBuilder.cs" />
+    <Compile Include="Core\Column.cs" />
+    <Compile Include="Core\ColumnBuilder.cs" />
     <Compile Include="Components\PropertyField.cs" />
+    <Compile Include="Components\TableComponent.cs" />
+    <Compile Include="Core\PropertyControl.cs" />
+    <Compile Include="Core\Validation\Base\IValidRule.cs" />
+    <Compile Include="Core\Validation\Base\ValidRule.cs" />
+    <Compile Include="Core\Validation\LinkedType\ILinkedTypeValidRule.cs" />
+    <Compile Include="Core\Validation\LinkedType\LinkedTypeValidationRule.cs" />
+    <Compile Include="Core\Validation\StringValidRule\IStringValidRule.cs" />
+    <Compile Include="Core\Validation\StringValidRule\StringValidRule.cs" />
+    <Compile Include="Core\Validation\ValueTypeValidRule\IValueTypeValidRule.cs" />
+    <Compile Include="Core\Validation\ValueTypeValidRule\ValueTypeValidRule.cs" />
+    <Compile Include="Core\Validation\ValidConfig.cs" />
+    <Compile Include="Core\Validation\ValidPredicate.cs" />
     <Compile Include="Events\UpdatePipe.cs" />
     <Compile Include="Pages\ItemDetailPage.xaml.cs">
       <DependentUpon>ItemDetailPage.xaml</DependentUpon>
@@ -81,14 +104,22 @@
     <Compile Include="Pages\ItemsPage.xaml.cs">
       <DependentUpon>ItemsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ToursDetailsPage.xaml.cs">
+      <DependentUpon>ToursDetailsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\CloneItemsSerivce.cs" />
     <Compile Include="Services\FieldsGenerator.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Abstract\EditItemViewModel.cs" />
+    <Compile Include="ViewModels\InsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IEditItemViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IItemsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ItemsViewModel.cs" />
+    <Compile Include="Core\Interfaces\IPropertyBuilder.cs" />
+    <Compile Include="ViewModels\LaynersViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ToursDetailViewModel.cs" />
+    <Compile Include="ViewModels\ToursViewModel.cs" />
     <Page Include="Dictionaries\Classes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +142,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ItemsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ToursDetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,7 +186,11 @@
       <Project>{1122897e-3df2-4e7a-bc2a-233b007df0ec}</Project>
       <Name>DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WpfControlLibrary1\WpfControlLibrary1.csproj">
+    <ProjectReference Include="..\MVVM_Core\MVVM_Core.csproj">
+      <Project>{E2DD1F52-CC8D-4BEA-AB48-7959EC923F2B}</Project>
+      <Name>MVVM_Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\VIT\Downloads\Cruises-master\Cruises-master\WpfControlLibrary1\WpfControlLibrary1.csproj">
       <Project>{43d571cc-c97f-4bb7-bde2-321ff6b60260}</Project>
       <Name>WpfControlLibrary1</Name>
     </ProjectReference>

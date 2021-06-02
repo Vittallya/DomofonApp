@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Dictionaries/Classes.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/WpfControlLibrary1;component/Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/WpfControlLibrary1;component/ControlsStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

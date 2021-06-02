@@ -9,6 +9,7 @@ using System.Windows;
 using Admin.Components;
 using DAL;
 using System.Data.Entity;
+using Admin.Core.Interfaces;
 
 namespace Admin.Services
 {
@@ -19,6 +20,21 @@ namespace Admin.Services
         public object Item { get; private set; }
 
         public bool IsEdit { get; private set; }
+
+        private object _controls;
+
+        public void SetupControls<T>(IEnumerable<IPropertyControl<T>> propertyControls, bool isEdit)
+        {
+            _controls = propertyControls;
+            IsEdit = isEdit;
+        }
+
+        public IEnumerable<IPropertyControl<T>> GetControls<T>()
+        {
+            if (_controls is IEnumerable<IPropertyControl<T>> collection)
+                return collection;
+            throw new ArgumentException($"type of collection is not IEnumerable<IPropertyControl<{typeof(T).Name}>>");
+        }
 
         public async Task Generate<T>(T item, BindingComponent[] bindList, bool isEdit)
         {
@@ -152,4 +168,6 @@ namespace Admin.Services
             return stack;
         }
     }
+
+
 }

@@ -19,7 +19,7 @@ namespace Main.ViewModels
         public ObservableCollection<OrderedProductDto> OrderedProducts { get; set; }
         public ObservableCollection<ServiceDto> OrderedServices { get; set; }
 
-        public ClientViewModel(PageService pageservice, UserService userService, OrderService orderService) : base(pageservice)
+        public ClientViewModel(PageManager pageservice, UserService userService, OrderService orderService) : base(pageservice)
         {
             this.userService = userService;
             this.orderService = orderService;
@@ -70,7 +70,7 @@ namespace Main.ViewModels
 
         protected override void Back(object p)
         {
-            pageservice.ChangePage<Pages.CatalogPage>(DisappearAnimation.Default);
+            pageservice.Back<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
         public ObservableCollection<OrderDto> Orders { get; set; }

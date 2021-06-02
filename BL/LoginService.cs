@@ -27,7 +27,7 @@ namespace BL
         public string ErrorMessage { get; private set; }
         
 
-        public async Task<bool> Login(string login, string pass)
+        public async Task<int> Login(string login, string pass)
         {
             await dbContext.Profiles.Include(x => x.Client).LoadAsync();
 
@@ -39,11 +39,11 @@ namespace BL
             {
                 var dto = mapper.MapTo<Client, ClientDto>(user.Client);
                 userService.SetupUser(dto);
-                return true;
+                return user.Id;
             }
             ErrorMessage = "Неверный логин или пароль или и то и то";
 
-            return false;
+            return -1;
         }
 
     }

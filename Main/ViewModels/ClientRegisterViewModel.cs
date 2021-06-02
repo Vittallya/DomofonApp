@@ -15,7 +15,7 @@ namespace Main.ViewModels
 
         public bool IsRegisterRequiered { get; set; }
 
-        public ClientRegisterViewModel(PageService pageservice, RegisterService registerService, EventBus eventBus) : base(pageservice)
+        public ClientRegisterViewModel(PageManager pageservice, RegisterService registerService, EventBus eventBus) : base(pageservice)
         {
             this.registerService = registerService;
             this.eventBus = eventBus;
@@ -54,6 +54,11 @@ namespace Main.ViewModels
                 ClientDto.Id = res.Item2;
                 await eventBus.Publish(new Events.ClientRegistered(ClientDto));
                 registerService.Clear();
+
+                if (!pageservice.Next())
+                {
+                    pageservice.Back(BackSlideAnim, true);
+                }
             }
         }
 

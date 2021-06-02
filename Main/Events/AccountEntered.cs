@@ -7,6 +7,11 @@ namespace Main.Events
 {
     public class AccountEntered : IEvent
     {
-        public string Name { get; set;  }
+        public AccountEntered(int id)
+        {
+            Id = id;
+        }
+
+        public int Id { get; set;  }
     }
 }

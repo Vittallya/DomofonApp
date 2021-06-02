@@ -24,6 +24,13 @@ namespace Admin.ViewModels
 
         public bool LoadingContext { get; set; } = true;
 
+        public ObservableCollection<Components.TableComponent> Tables { get; set; } = new ObservableCollection<Components.TableComponent>()
+        {
+            new Components.TableComponent{Name = "Туры", Type = typeof(ToursViewModel)},
+            new Components.TableComponent{Name = "Лайнеры", Type = typeof(LaynersViewModel)},
+            new Components.TableComponent{Name = "Страховка", Type = typeof(InsViewModel)},
+        };
+
         public MainViewModel(DbContextLoader loader, PageService pageService, EventBus eventBus, 
             BL.ServerPipeHandler serverPipeHandler)
         {
@@ -33,46 +40,10 @@ namespace Admin.ViewModels
             this.serverPipeHandler = serverPipeHandler;
             pageService.PageChanged += PageService_PageChanged;
 
+            Console.WriteLine(1.CompareTo(2));
+
             init();
         }
-
-        public ICommand Test => new Command(x =>
-        {
-            
-        });
-
-        public ICommand AutosCommand => new Command(x =>
-        {
-            //Locator.SetItemsViewModel<AutosViewModel>();
-            pageService.ClearHistoryByPool(1);
-            pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
-        });
-        public ICommand FinesCommand => new Command(x =>
-        {
-            //Locator.SetItemsViewModel<FinesViewModel>();
-            pageService.ClearHistoryByPool(1);
-            pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
-        });
-
-        public ICommand ParkingCommand => new Command(x =>
-        {
-            //Locator.SetItemsViewModel<ParkingViewModel>();
-            pageService.ClearHistoryByPool(1);
-            pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
-        });
-        public ICommand EvacCommand => new Command(x =>
-        {
-            //Locator.SetItemsViewModel<EvacuationsViewModel>();
-            pageService.ClearHistoryByPool(1);
-            pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
-        });
-        public ICommand DeclarationCommand => new Command(x =>
-        {
-            //Locator.SetItemsViewModel<DeclarationsViewModel>();
-            pageService.ClearHistoryByPool(1);
-            pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
-        });
-
 
         public override Page CurrentPage { get; set; }
 
@@ -81,14 +52,28 @@ namespace Admin.ViewModels
             serverPipeHandler.Send(updatePipe.GetString());
         }
 
+        public string TableName { get; set; }
+
+        public ICommand SelectTable => new Command(x =>
+        {
+            if(x is Components.TableComponent comp)
+            {
+                TableName = comp.Name;
+                Locator.SetItemsViewModel(comp.Type);
+                pageService.ClearHistoryByPool(1);
+                pageService.ChangePage<Pages.ItemsPage>(1, DisappearAndToSlideAnim.Default);
+
+            }
+        });
+
         async void init()
         {
             eventBus.Subscribe<Events.UpdatePipe, MainViewModel>(Update, false);
 
-            serverPipeHandler.Init();
+            serverPipeHandler.Init("CruisesPipe");
             try
             {
-                await loader.LoadAsync<Client>();
+                await loader.LoadAsync<Product>();
                 LoadingContext = false;
             }
             catch(Exception ex)

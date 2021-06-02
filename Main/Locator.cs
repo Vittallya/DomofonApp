@@ -23,6 +23,17 @@ namespace Main
         public  ViewModels.ClientRegisterViewModel ClientRegisterViewModel => Services.GetRequiredService<ClientRegisterViewModel>();
         public  ViewModels.OrderResultViewModel OrderResultViewModel => Services.GetRequiredService<OrderResultViewModel>();
         public  ViewModels.ClientViewModel ClientViewModel => Services.GetRequiredService<ClientViewModel>();
+        public  ViewModels.LoginAdminViewModel LoginAdminViewModel => Services.GetRequiredService<LoginAdminViewModel>();
+        public  ViewModels.AdminViewModel AdminViewModel => Services.GetRequiredService<AdminViewModel>();
+        public ViewModels.IObjectViewModel ObjectViewModel => _objVmGetter.Invoke();
+
+
+        private Func<IObjectViewModel> _objVmGetter;
+
+        public void DefineObjectsViewModel<TModel>()
+        {
+            _objVmGetter = () => Services.GetRequiredService<ObjectViewModel<TModel>>();
+        }
     }
 }
 
