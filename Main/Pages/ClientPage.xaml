@@ -61,7 +61,7 @@
                                 Command="{Binding SelectOrder}"
                                 Style="{DynamicResource LinkButton}"
                                 DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
-                                FontSize="14"
+                                FontSize="15"
                                 Width="150"
                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}, Path=DataContext}"
                                 />
@@ -70,7 +70,7 @@
                                 Command="{Binding CancelOrder}"
                                 Style="{DynamicResource LinkButton}"
                                 DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
-                                FontSize="14"
+                                FontSize="15"
                                     Width="150"
                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}, Path=DataContext}"
                                 />

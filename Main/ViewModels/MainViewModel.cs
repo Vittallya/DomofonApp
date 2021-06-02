@@ -52,12 +52,12 @@ namespace Main.ViewModels
 
         void CheckFile()
         {
-            if (!File.Exists("DefaultImageCatalog.txt"))
+            if (!File.Exists(Rules.Static.FileName))
             {
-                File.WriteAllText("DefaultImageCatalog.txt", Properties.Resources.DefaultImageCatalog);
+                File.WriteAllText(Rules.Static.FileName, Properties.Resources.DefaultImageCatalog);
             }
 
-            string path = File.ReadAllLines("DefaultImageCatalog.txt")[0];
+            string path = File.ReadAllLines(Rules.Static.FileName)[0];
 
             if (!Directory.Exists(path))
             {
@@ -101,19 +101,19 @@ namespace Main.ViewModels
 
         async void Init()
         {
-            //pipeHanlder.Init("DomofonApp");
-            //pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
+            //IsLoaded = true;
+            pipeHanlder.Init("DomofonApp");
+            pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
 
-            //CheckFile();
+            CheckFile();
 
-            //IsLoaded = await contextLoader.LoadAsync<Product>();
-            IsLoaded = true;
+            IsLoaded = await contextLoader.LoadAsync<Product>();
             IsLoadingAnimation = false;
 
             if (IsLoaded)
             {
-                //pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
-                pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
+                pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
+                //pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
             }
             else
             {

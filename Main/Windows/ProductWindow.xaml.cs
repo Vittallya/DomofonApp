@@ -1,4 +1,4 @@
-﻿using Main.ViewModels;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +11,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Main.Pages
+namespace Main.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для AdminPage.xaml
+    /// Логика взаимодействия для ProductWindow.xaml
     /// </summary>
-    public partial class AdminPage : Page
+    public partial class ProductWindow : Window
     {
-        public AdminPage()
+        public ProductWindow()
         {
             InitializeComponent();
+            
         }
 
-        private void Page_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as AdminViewModel).IsVariantsVis = false;
+            DialogResult = false;
         }
     }
 }

@@ -77,6 +77,7 @@
     <Compile Include="Client\ServicesService.cs" />
     <Compile Include="System\ClientPipeHanlder.cs" />
     <Compile Include="System\DbContextLoader.cs" />
+    <Compile Include="System\FileBrowserService.cs" />
     <Compile Include="System\MapperService.cs" />
     <Compile Include="System\RequestService.cs" />
     <Compile Include="System\ServerPipeHandler.cs" />

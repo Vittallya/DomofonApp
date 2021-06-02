@@ -15,6 +15,7 @@ namespace DAL.Dto
 
         public double Cost { get; set; }
         public string ImageFullPath { get; set; }
+        public string ImagePath { get; set; }
         public bool IsInBasket { get; set; }
     }
 }

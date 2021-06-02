@@ -13,6 +13,11 @@
     <BitmapImage x:Key="4" UriSource="Images/4.png"/>
     <BitmapImage x:Key="5" UriSource="Images/5.png"/>
     <BitmapImage x:Key="6" UriSource="Images/6.png"/>
+    
+    <BitmapImage x:Key="add" UriSource="Images/add.png"/>
+    <BitmapImage x:Key="edit" UriSource="Images/edit.png"/>
+    <BitmapImage x:Key="remove" UriSource="Images/remove.png"/>
+    <BitmapImage x:Key="user" UriSource="Images/user.png"/>
 
     <Grid x:Key="Plus1">
         <Border HorizontalAlignment="Center" 

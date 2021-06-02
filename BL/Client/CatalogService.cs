@@ -55,23 +55,17 @@ namespace BL
             return instance;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetProductsAsync(string name = null)
+        public IEnumerable<ProductDto> GetProductsAsync(string name = null)
         {
-            if(products == null)
-            {
-                string catalog = File.ReadAllLines("DefaultImageCatalog.txt")[0];
-                await Reload(x => $"{catalog}\\{x}");
-            }
-
             if(name != null)
                 return products.Where(x => x.Name == name);
 
             return products;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetProductsIncludeBasketAsync(IEnumerable<ProductDto> dtos, string name = null)
+        public IEnumerable<ProductDto> GetProductsIncludeBasketAsync(IEnumerable<ProductDto> dtos, string name = null)
         {
-            var collection = (await GetProductsAsync(name)).Except(dtos, new IdComparer()).OfType<ProductDto>();
+            var collection = (GetProductsAsync(name)).Except(dtos, new IdComparer()).OfType<ProductDto>();
             return collection.Union(dtos);
         }
 

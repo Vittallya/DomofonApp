@@ -5,35 +5,430 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Main.Pages"
       mc:Ignorable="d" 
+      MouseDown="Page_MouseDown"
       d:DesignHeight="450" d:DesignWidth="800"
       DataContext="{Binding Source={StaticResource Locator}, Path=AdminViewModel}"
       Title="AdminPage">
 
-    <Grid>
+    <Grid MouseDown="Page_MouseDown">
 
-        <Button
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="12*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <Button
                 Grid.Row="0"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Style="{DynamicResource ButtonEmpty}"
                 Command="{Binding BackCommand}">
-            <Image Height="50" Source="{DynamicResource Back}"/>
+                <Image Height="50" Source="{DynamicResource Back}"/>
 
-        </Button>
+            </Button>
 
-        <StackPanel
-                HorizontalAlignment="Center" 
-                     Width="125"
-            
-            VerticalAlignment="Center">
-            <TextBox 
-                Text="{Binding DefalutImageCatalog, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock 
+                Margin="15 0 0 0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Style="{DynamicResource TextBlock_H1}"
+            Text="Панель администратора"/>
 
-            <ListBox 
-                Margin="0 10" 
-                Visibility="{Binding IsVariantsVis, Converter={StaticResource BoolToVis}}" ItemsSource="{Binding PathVariants}"/>
         </StackPanel>
+
+        <TabControl 
+            Grid.ColumnSpan="2"
+            TabStripPlacement="Bottom" Grid.Row="1">
+            <TabItem
+                
+                FontSize="15" Header="Товары">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="75"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ScrollViewer>
+                        
+                    <StackPanel>
+
+                        <ListBox 
+                            BorderBrush="Transparent"
+                         ItemsSource="{Binding Products, UpdateSourceTrigger=PropertyChanged}">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="550"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <DockPanel HorizontalAlignment="Left"   Margin="25 0">
+
+                                        <Image DockPanel.Dock="Left" MaxHeight="190" 
+                                               Width="200"
+                                               Height="100"
+                                               HorizontalAlignment="Center" Source="{Binding ImageFullPath}"/>
+
+                                                <StackPanel>
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" 
+                                                               Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <TextBlock Margin="0 5"
+                                                               FontSize="16"
+                                                               Style="{DynamicResource TextBlock_H3}"
+                                                               Text="{Binding Manufacturer, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <TextBlock 
+                                                        Style="{DynamicResource TextBlock_H3_DemiBold}" 
+                                                           FontStyle="Italic"
+                                                           Margin="0 5"
+                                                        Text="{Binding Cost, StringFormat='{}{0}р.'}"/>
+
+                                                </StackPanel>
+                                            </DockPanel>
+
+
+                                            <StackPanel HorizontalAlignment="Center" 
+                                                        VerticalAlignment="Center"
+                                                        Grid.Column="1"
+                                                        Orientation="Horizontal">
+
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding EditProduct}"
+                                                    Style="{DynamicResource ButtonEmpty}"
+                                                    Padding="15 3">
+                                                    <Image Height="30" Source="{DynamicResource edit}"/>
+                                                </Button>
+                                                <Button 
+                                                    Style="{DynamicResource ButtonEmpty}"
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding DeleteProduct}"
+                                                    Padding="15 3"
+                                                    Margin="15 0" >
+
+                                                    <Image Height="30" Source="{DynamicResource remove}"/>
+                                                </Button>
+
+                                            </StackPanel>
+                                        </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ListBox>
+
+                    </StackPanel>
+                        
+                    </ScrollViewer>
+
+
+                    <Button
+                            Grid.Row="1"
+                        Style="{DynamicResource ButtonEmpty}"
+                            Command="{Binding AddProduct}"
+                            Padding="15 3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+
+                        <Image Height="50" Source="{DynamicResource add}"/>
+                    </Button>
+                </Grid>
+                
+            </TabItem>
+            <TabItem
+                
+                FontSize="15" Header="Услуги">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="75"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ScrollViewer>
+                        
+                    <StackPanel>
+
+                        <ListBox 
+                            BorderBrush="Transparent"
+                         ItemsSource="{Binding Services, UpdateSourceTrigger=PropertyChanged}">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="550"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <DockPanel HorizontalAlignment="Left"   Margin="25 0">
+
+                                                <StackPanel>
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" 
+                                                               Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <TextBlock 
+                                                        Style="{DynamicResource TextBlock_H3_DemiBold}" 
+                                                           FontStyle="Italic"
+                                                           Margin="0 5"
+                                                        Text="{Binding Cost, StringFormat='{}{0}р.'}"/>
+
+                                                </StackPanel>
+                                            </DockPanel>
+
+
+                                            <StackPanel HorizontalAlignment="Center" 
+                                                        VerticalAlignment="Center"
+                                                        Grid.Column="1"
+                                                        Orientation="Horizontal">
+
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding EditService}"
+                                                    Padding="15 3"
+                                                    Style="{DynamicResource ButtonEmpty}">
+
+                                                    <Image Height="30" Source="{DynamicResource edit}"/>
+                                                </Button>
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding DeleteService}"
+                                                    Padding="15 3"
+                                                    Style="{DynamicResource ButtonEmpty}"
+                                                    Margin="15 0" >
+
+                                                    <Image Height="30" Source="{DynamicResource remove}"/>
+                                                </Button>
+
+                                            </StackPanel>
+                                        </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ListBox>
+
+                    </StackPanel>
+                        
+                    </ScrollViewer>
+
+
+                    <Button
+                            Grid.Row="1"
+                                Command="{Binding AddService}"
+                                Padding="15 3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                            Style="{DynamicResource ButtonEmpty}"
+                                                    Margin="15 0" >
+
+                        <Image Height="50" Source="{DynamicResource add}"/>
+                    </Button>
+                </Grid>
+                
+            </TabItem>
+            <TabItem
+                
+                FontSize="15" Header="Оптовые скидки">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="75"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ScrollViewer>
+                        
+                    <StackPanel>
+
+                        <ListBox 
+                            BorderBrush="Transparent"
+                         ItemsSource="{Binding Sales, UpdateSourceTrigger=PropertyChanged}">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="650"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <DockPanel HorizontalAlignment="Left"   Margin="25 0">
+
+                                                <StackPanel>
+                                                    <TextBlock Margin="0 5"
+                                                               FontWeight="Bold"
+                                                               Style="{DynamicResource TextBlock_H3}" 
+                                                               Text="{Binding Product.Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Cкидка:"/>
+                                                        <Run
+                                                            FontWeight="Bold"
+                                                            Text="{Binding SaleValue, 
+                                                        StringFormat='{}{0}%',
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </TextBlock>
+
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Начальное количество товаров::"/>
+                                                        <Run
+                                                            FontWeight="Bold"
+                                                            Text="{Binding StartCount, 
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </TextBlock>
+
+                                                </StackPanel>
+                                            </DockPanel>
+
+
+                                            <StackPanel HorizontalAlignment="Center" 
+                                                        VerticalAlignment="Center"
+                                                        Grid.Column="1"
+                                                        Orientation="Horizontal">
+
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding EditSale}"
+                                                    Padding="15 3"
+                                                    Style="{DynamicResource ButtonEmpty}">
+
+                                                    <Image Height="30" Source="{DynamicResource edit}"/>
+                                                </Button>
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding DeleteSale}"
+                                                    Padding="15 3"
+                                                    Margin="15 0" 
+                                                    Style="{DynamicResource ButtonEmpty}">
+
+                                                    <Image Height="30" Source="{DynamicResource remove}"/>
+                                                </Button>
+
+                                            </StackPanel>
+                                        </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ListBox>
+
+                    </StackPanel>
+                        
+                    </ScrollViewer>
+
+
+                    <Button
+                            Grid.Row="1"
+                                Command="{Binding AddSale}"
+                                Padding="15 3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource ButtonEmpty}">
+
+                        <Image Height="50" Source="{DynamicResource add}"/>
+                    </Button>
+                </Grid>
+                
+            </TabItem>
+            <TabItem FontSize="15" Header="Базовые параметры">
+                
+                
+                <ScrollViewer
+                            Margin="25 10"
+                            VerticalAlignment="Top"
+                           HorizontalScrollBarVisibility="Disabled"
+                           VerticalScrollBarVisibility="Auto">
+                    <DockPanel>
+                        <TextBlock 
+                        Style="{DynamicResource TextBlock_H3}"
+                        DockPanel.Dock="Left"
+                        Text="Каталог для хранения изображений: "/>
+                        
+                        <Button 
+                            Margin="0 15"
+                            HorizontalAlignment="Right"
+                            Padding="25 4"
+                            Command="{Binding AcceptPath}"
+                            DockPanel.Dock="Bottom" Content="Применить этот путь"/>
+
+                        <StackPanel
+                            Margin="15 0 0 0"
+                            DockPanel.Dock="Right">
+                            <TextBox 
+                        FontSize="15"
+                        MinWidth="100"
+                        Text="{Binding DefalutImageCatalog, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Border
+                            x:Name="variants"
+                                Margin="0 10"
+                                CornerRadius="3"
+                                Background="LightBlue"
+                                Visibility="{Binding IsVariantsVis, Converter={StaticResource BoolToVis}}">
+                            
+                            <ItemsControl  
+                                ItemsSource="{Binding PathVariants}">
+
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+
+
+                                        <Grid>
+                                            <TextBlock
+                                                Opacity="0"
+                                                Foreground="{x:Null}"
+                                                Visibility="Collapsed"
+                                                x:Name="tb" Text="{Binding}"/>
+
+                                            <Button 
+                                                HorizontalContentAlignment="Left"
+                                                Background="Transparent"
+                                                    Cursor="Hand"
+                                                    BorderBrush="Transparent"
+                                                DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                Command="{Binding SetVariant}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content.Text}"
+                            
+                                                FontSize="15" >
+                                                <TextBlock Text="{Binding ElementName=tb, Path=Text}"/>
+                                            </Button>
+
+
+                                        </Grid>
+
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+
+
+                    </DockPanel>
+                </ScrollViewer>
+
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </Page>

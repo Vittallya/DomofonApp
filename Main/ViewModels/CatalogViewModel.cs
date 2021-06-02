@@ -11,6 +11,7 @@ using DAL.Dto;
 using System.Windows.Input;
 using AutoMapper;
 using Main.Events;
+using System.IO;
 
 namespace Main.ViewModels
 {
@@ -127,14 +128,17 @@ namespace Main.ViewModels
 
         async Task Reload()
         {
+            string catalog = File.ReadAllLines(Rules.Static.FileName)[0];
+
+            await catalogService.Reload(x => $"{catalog}\\{x}");
             if (basketService.BasketCount > 0)
             {
-                Products = new ObservableCollection<ProductDto>(await catalogService.GetProductsIncludeBasketAsync(basketService.GetCatalog()));
+                Products = new ObservableCollection<ProductDto>(catalogService.GetProductsIncludeBasketAsync(basketService.GetCatalog()));
             }
             else
             {
 
-                Products = new ObservableCollection<ProductDto>(await catalogService.GetProductsAsync());
+                Products = new ObservableCollection<ProductDto>(catalogService.GetProductsAsync());
             }
             IsLoading = false;
             OnPropertyChanged(nameof(BasketCount));

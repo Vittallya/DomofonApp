@@ -154,6 +154,15 @@
     <Compile Include="Windows\ObjectWindow.xaml.cs">
       <DependentUpon>ObjectWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ProductWindow.xaml.cs">
+      <DependentUpon>ProductWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SaleWindow.xaml.cs">
+      <DependentUpon>SaleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ServiceWindow.xaml.cs">
+      <DependentUpon>ServiceWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -219,6 +228,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\ProductWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SaleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ServiceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -259,7 +280,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Библиотеки\MVVM_Core-master\MVVM_Core.csproj">
+    <ProjectReference Include="..\..\..\..\..\..\Библиотеки\MVVM_Core\MVVM_Core.csproj">
       <Project>{E2DD1F52-CC8D-4BEA-AB48-7959EC923F2B}</Project>
       <Name>MVVM_Core</Name>
     </ProjectReference>

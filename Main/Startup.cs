@@ -15,6 +15,7 @@ namespace Main
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<AllDbContext>();
+            services.AddTransient<FileBrowserService>();
             services.AddTransient<AdminService>();
             services.AddTransient<DbContextLoader>();
             services.AddTransient<LoginService>();

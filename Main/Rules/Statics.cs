@@ -8,6 +8,6 @@ namespace Main.Rules
 {
     public static class Static
     {
-        
+        public static readonly string FileName = "DefaultImageCatalog.txt";
     }
 }
