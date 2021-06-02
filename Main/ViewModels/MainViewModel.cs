@@ -9,6 +9,9 @@ using DAL;
 using System;
 using Main.Services;
 using DAL.Models;
+using System.IO;
+using System.Text;
+using System.Windows.Media.Imaging;
 
 namespace Main.ViewModels
 {
@@ -46,17 +49,71 @@ namespace Main.ViewModels
 
         public string LoadingText { get; set; } = "Загрузка бд...";
 
+
+        void CheckFile()
+        {
+            if (!File.Exists("DefaultImageCatalog.txt"))
+            {
+                File.WriteAllText("DefaultImageCatalog.txt", Properties.Resources.DefaultImageCatalog);
+            }
+
+            string path = File.ReadAllLines("DefaultImageCatalog.txt")[0];
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+                var imgs = new BitmapImage[]
+                {
+                    App.Current.MainWindow.FindResource("1") as BitmapImage,
+                    App.Current.MainWindow.FindResource("2") as BitmapImage,
+                    App.Current.MainWindow.FindResource("3") as BitmapImage,
+                    App.Current.MainWindow.FindResource("4") as BitmapImage,
+                    App.Current.MainWindow.FindResource("5") as BitmapImage,
+                    App.Current.MainWindow.FindResource("6") as BitmapImage,
+                };
+
+
+                foreach(BitmapImage image in imgs)
+                {
+                    string name = Path.GetFileName(image.UriSource.OriginalString);
+
+                    using(FileStream fs = new FileStream(Path.Combine(path, name), FileMode.CreateNew, FileAccess.Write))
+                    {
+                        BitmapEncoder encoder = new PngBitmapEncoder();
+
+                        string ext = Path.GetExtension(name);
+
+
+                        switch (ext)
+                        {
+                            case "jpeg": encoder = new JpegBitmapEncoder(); break;
+                            case "jpg": encoder = new JpegBitmapEncoder(); break;
+                            case "bmp": encoder = new BmpBitmapEncoder(); break;
+                        }
+
+                        encoder.Frames.Add(BitmapFrame.Create(image));
+                        encoder.Save(fs);
+                    }
+
+                }
+            }
+        }
+
         async void Init()
         {
-            pipeHanlder.Init("DomofonApp");
-            pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
+            //pipeHanlder.Init("DomofonApp");
+            //pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
 
-            IsLoaded = await contextLoader.LoadAsync<Product>();
+            //CheckFile();
+
+            //IsLoaded = await contextLoader.LoadAsync<Product>();
+            IsLoaded = true;
             IsLoadingAnimation = false;
 
             if (IsLoaded)
             {
-                pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
+                //pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
+                pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
             }
             else
             {

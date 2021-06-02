@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Main.Properties {
+namespace DAL.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Main.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Main.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DAL.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,22 @@ namespace Main.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на C:\.
+        ///   Ищет локализованную строку, похожую на USE [DomofonDb]
+        ///GO
+        ///
+        ///SET INDENTITY_INSERT [Services] ON;
+        ///
+        ///INSERT INTO [Services] VALUES 
+        ///	(N&apos;Доставка по Москве&apos;, 2900),
+        ///	(N&apos;Доставка по России&apos;, 3990),
+        ///	(N&apos;Монтаж домофона &apos;, 3500),
+        ///	(N&apos;Проводка &apos;, 5500);
+        ///
+        ///.
         /// </summary>
-        internal static string DefaultImageCatalog {
+        internal static string seed {
             get {
-                return ResourceManager.GetString("DefaultImageCatalog", resourceCulture);
+                return ResourceManager.GetString("seed", resourceCulture);
             }
         }
     }

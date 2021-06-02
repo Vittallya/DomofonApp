@@ -6,11 +6,19 @@
     <BitmapImage x:Key="Increace" UriSource="Images/increace.png"/>
     <BitmapImage x:Key="Decreace" UriSource="Images/decreace.png"/>
     <BitmapImage x:Key="Back" UriSource="Images/back.png"/>
+    
+    <BitmapImage x:Key="1" UriSource="Images/1.png"/>
+    <BitmapImage x:Key="2" UriSource="Images/2.png"/>
+    <BitmapImage x:Key="3" UriSource="Images/3.png"/>
+    <BitmapImage x:Key="4" UriSource="Images/4.png"/>
+    <BitmapImage x:Key="5" UriSource="Images/5.png"/>
+    <BitmapImage x:Key="6" UriSource="Images/6.png"/>
 
     <Grid x:Key="Plus1">
         <Border HorizontalAlignment="Center" 
                 VerticalAlignment="Center"
                 Background="Black" Height="1"/>
     </Grid>
-    
+
+
 </ResourceDictionary>

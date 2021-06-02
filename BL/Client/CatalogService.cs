@@ -6,6 +6,7 @@ using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,8 @@ namespace BL
         {
             if(products == null)
             {
-                await Reload(x => $"{Environment.CurrentDirectory}\\Images\\{x}.png");
+                string catalog = File.ReadAllLines("DefaultImageCatalog.txt")[0];
+                await Reload(x => $"{catalog}\\{x}");
             }
 
             if(name != null)
