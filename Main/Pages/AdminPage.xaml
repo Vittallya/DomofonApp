@@ -68,7 +68,7 @@
                             <DataTemplate>
                                 <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="550"/>
+                                                <ColumnDefinition Width="auto" MinWidth="600"/>
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
 
@@ -81,12 +81,38 @@
 
                                                 <StackPanel>
                                                     <TextBlock Margin="0 5" 
-                                                               Style="{DynamicResource TextBlock_H3}" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Название: "/>
+                                                        <Run
+                                                            FontWeight="Bold"
                                                                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </TextBlock>
                                                     <TextBlock Margin="0 5"
                                                                FontSize="16"
-                                                               Style="{DynamicResource TextBlock_H3}"
+                                                               Style="{DynamicResource TextBlock_H3}">
+                                                        <Run Text="Производитель: "/>
+                                                        <Run
+                                                            FontWeight="DemiBold"
                                                                Text="{Binding Manufacturer, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </TextBlock>
+                                                    <TextBlock Margin="0 5"
+                                                               FontSize="16"
+                                                               Style="{DynamicResource TextBlock_H3}">
+                                                        <Run Text="Количество на складе: "/>
+                                                        <Run 
+                                                            FontWeight="DemiBold"
+                                                            Text="{Binding StorageCount, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </TextBlock>
+
+                                                    <TextBlock Margin="0 5"
+                                                               FontSize="16"
+                                                               Style="{DynamicResource TextBlock_H3}">
+                                                        <Run Text="Категория: "/>
+                                                        <Run 
+                                                            FontWeight="DemiBold"
+                                                            Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"/>
+                                                        
+                                                    </TextBlock>
                                                     <TextBlock 
                                                         Style="{DynamicResource TextBlock_H3_DemiBold}" 
                                                            FontStyle="Italic"

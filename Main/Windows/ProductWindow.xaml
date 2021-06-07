@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Main.Windows"
-        mc:Ignorable="d"        
-        Title="ProductWindow" Height="400" Width="500">
+        mc:Ignorable="d"     Height="400" Width="500">
+
     <Grid Margin="25 15">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -38,6 +38,33 @@
                          Text="{Binding Item.Manufacturer, UpdateSourceTrigger=PropertyChanged}"
                          DockPanel.Dock="Right"  />
             </DockPanel>
+
+            <DockPanel Margin="0 10">
+
+                <TextBlock Style="{DynamicResource TextBlock_H4}" DockPanel.Dock="Left" Text="Количество на складе:" Width="150"/>
+                <TextBox FontSize="15" 
+                         Text="{Binding Item.StorageCount, UpdateSourceTrigger=PropertyChanged}"
+                         DockPanel.Dock="Right"  />
+            </DockPanel>
+            
+            <DockPanel>
+
+                    <TextBlock Style="{DynamicResource TextBlock_H4}" DockPanel.Dock="Left" Text="Категория:" Width="150"/>
+                    <Button                              
+                        Margin="10 0 0 0"
+                        Style="{DynamicResource LinkButton}"
+                        FontSize="14"
+                        Command="{Binding AddCategory}"
+                        DockPanel.Dock="Right" 
+                        Content="Добавить"/>
+                    <ComboBox FontSize="15" 
+                          SelectedValue="{Binding Item.Category}"
+                          ItemsSource="{Binding Param2}"
+                          SelectedValuePath="Name"
+                          DisplayMemberPath="Name"
+                             DockPanel.Dock="Right"  />
+
+                </DockPanel>
 
             <DockPanel Margin="0 10">
 

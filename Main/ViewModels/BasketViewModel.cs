@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Main.ViewModels
@@ -199,8 +200,17 @@ namespace Main.ViewModels
         {
             if (x is OrderedProductDto dto)
             {
+                if(dto.Count >= dto.ProductDto.StorageCount)
+                {
+                    MessageBox.Show($"На складе больше нет товаров \"{dto.ProductDto.Name}\"");
+                    return;
+                }
+
+
                 int i = OrderedProducts.IndexOf(dto);
                 OrderedProducts[i] = basketService.IncreaceCount(dto);
+                
+
 
                 if (!timer.IsStarted)
                     timer.StartTimer();

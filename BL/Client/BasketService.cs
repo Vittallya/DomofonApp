@@ -73,9 +73,12 @@ namespace BL
             return instance;
         }
 
-        public IEnumerable<ProductDto> GetCatalog()
+        public IEnumerable<ProductDto> GetCatalog(string cName = null)
         {
-            return orderedProducts.Select(x => x.ProductDto);
+            if (cName == null)
+                return orderedProducts.Select(x => x.ProductDto);
+
+            return orderedProducts.Select(x => x.ProductDto).Where(x => x.Category == cName);
         }
 
         public async Task<OrderedProductDto> UpdateSale(OrderedProductDto dto)

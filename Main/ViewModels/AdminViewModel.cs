@@ -13,6 +13,8 @@ using System.IO;
 using System.Data.Entity;
 using Main.Windows;
 using MVVM_Core.Validation;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Main.ViewModels
 {
@@ -51,6 +53,7 @@ namespace Main.ViewModels
 
         public object Item { get; set; }
         public object Param1 { get; set; }
+        public object Param2 { get; set; }
         public bool IsEdit { get; set; }
 
         Func<Task> _invoker;
@@ -89,6 +92,8 @@ namespace Main.ViewModels
         {
             DefalutImageCatalog = File.ReadAllLines(Rules.Static.FileName)[0];
             hasChanges = false;
+
+            await dbContext.Categories.LoadAsync();
             await ReloadProducts();
             await ReloadServices();
             await ReloadSales();
@@ -104,7 +109,9 @@ namespace Main.ViewModels
             validator.ForProperty(() => product.Cost, "Стоимость").MoreEqualThan(0);
             validator.ForProperty(() => product.Manufacturer, "Производитель").NotEmpty();
             validator.ForProperty(() => product.Name, "Название").NotEmpty();
+            validator.ForProperty(() => product.Category, "Категоря").NotEmpty("Категория должна быть выбрана");
             IsEdit = false;
+            Param2 = new ObservableCollection<Category>(dbContext.Categories);
 
             _invoker = async () =>
             {
@@ -130,6 +137,7 @@ namespace Main.ViewModels
                 var product = mapper.MapTo<ProductDto, Product>(dto);
                 Item = product;
                 Param1 = product.ImagePath;
+                Param2 = new ObservableCollection<Category>(dbContext.Categories);
 
                 validator.ForProperty(() => product.Cost, "Стоимость").MoreEqualThan(0);
                 validator.ForProperty(() => product.Manufacturer, "Производитель").NotEmpty();
@@ -238,8 +246,9 @@ namespace Main.ViewModels
             }
         });
 
-#endregion
+        #endregion
 
+        #region Оптовая скидка
         public ICommand AddSale => new Command(x =>
         {
             validator.Clear();
@@ -311,7 +320,7 @@ namespace Main.ViewModels
                 Sales.Remove(item);
             }
         });
-
+        #endregion
         public ICommand OpenFileDialogCommand => new Command(x =>
         {
 
@@ -329,6 +338,30 @@ namespace Main.ViewModels
             _window.ShowDialog();
         }
 
+        public ICommand AddCategory => new Command(x =>
+        {
+            var promt = new PromtWindow();
+            promt.Title = "Введите название категории";
+            var context = new DataContexter();
+            context.Command1 = new Command(y =>
+            {       
+                promt.Close();
+                var cat = new Category { Name = context.Param1.ToString() };
+                dbContext.Categories.Add(cat);
+                (Param2 as ICollection<Category>).Add(cat);
+                
+            }, a => !string.IsNullOrEmpty(context.Param1?.ToString()));
+
+            
+            promt.DataContext = context;
+            promt.ShowDialog();
+
+        });
+        public ICommand RemoveCategory => new Command(x =>
+        {
+            string cat = (Item as Product).Category;
+
+        });
 
         public ICommand AcceptCommand => new CommandAsync(async x =>
         {
@@ -348,7 +381,7 @@ namespace Main.ViewModels
 
         protected override void Back(object param)
         {
-            pageservice.Back<Pages.CatalogPage>(BackSlideAnim, true);
+            pageservice.ClearHistoryAndChangeTo<Pages.CatalogPage>(DisappearAnimation.Default);
         }
 
         public ICommand AcceptPath => new Command(x =>
@@ -452,6 +485,16 @@ namespace Main.ViewModels
 
         }
 
+        class DataContexter
+        {
+            public object Param1 { get; set; }
+            public object Param2 { get; set; }
+
+            public ICommand Command1 { get; set; }
+            public ICommand Command2 { get; set; }
+        }
 
     }
+
+
 }

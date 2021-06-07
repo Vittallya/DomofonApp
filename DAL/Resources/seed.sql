@@ -10,15 +10,27 @@ INSERT INTO [Services]([Id],[Name],[Cost]) VALUES
 	(4, N'Проводка ', 5500);
 
 SET IDENTITY_INSERT [Services] OFF;
+
+
+SET IDENTITY_INSERT [Categories] ON;
+
+INSERT INTO [Categories]([Id],[Name]) VALUES 
+	(1, N'Голосовые домофоны'),
+	(2, N'Видеодомофоны'),
+	(3, N'Домофоны со сканером лица' ),
+	(4, N'Видедомофоны со встроенной сигнализацией');
+
+SET IDENTITY_INSERT [Categories] OFF;
+
 SET IDENTITY_INSERT [Products] ON;
 
-INSERT INTO [Products]([Id],[Name], [Manufacturer], [Cost], [ImagePath]) VALUES 
-						(1,N'Домофон обычный','Visit', 6900,'1.png'),
-						(2,N'Видеодомофон обычный','SuperDom', 6900,'2.png'),
-						(3,N'Видеодомофон extra','Visit', 12500,'3.png'),
-						(4,N'Комплект видеодомофона Falcon Eye','ExtraPhones', 15400,'4.png'),
-						(5,N'Домофон выского качества','Global', 7600,'5.png'),
-						(6,N'Домофон Heavy','Visit', 5900,'6.png');
+INSERT INTO [Products]([Id],[Name], [Manufacturer], [Cost], [ImagePath], [StorageCount], [Category]) VALUES 
+						(1,N'Домофон обычный','Visit', 6900,'1.png', 123, N'Голосовые домофоны'),
+						(2,N'Видеодомофон обычный','SuperDom', 6900,'2.png', 435, N'Видеодомофоны'),
+						(3,N'Видеодомофон extra','Visit', 12500,'3.png', 344, N'Видеодомофоны'),
+						(4,N'Комплект видеодомофона Falcon Eye','ExtraPhones', 15400,'4.png', 543, N'Видедомофоны со встроенной сигнализацией'),
+						(5,N'Домофон выского качества','Global', 7600,'5.png', 190, N'Домофоны со сканером лица'),
+						(6,N'Домофон Heavy','Visit', 5900,'6.png', 567, N'Голосовые домофоны');
 
 SET IDENTITY_INSERT [Products] OFF;
 

@@ -22,10 +22,11 @@ namespace Main.ViewModels
         private readonly BasketService basketService;
         private readonly UserService userService;
         private readonly RegisterService registerService;
+        private int selectedCategory;
 
         public bool IsLoading { get; set; }
 
-        public CatalogViewModel(PageManager pageservice, BL.CatalogService catalogService, 
+        public CatalogViewModel(PageManager pageservice, BL.CatalogService catalogService,
             EventBus eventBus, BasketService basketService, UserService userService, RegisterService registerService) : base(pageservice)
         {
             this.catalogService = catalogService;
@@ -34,7 +35,7 @@ namespace Main.ViewModels
             this.userService = userService;
             this.registerService = registerService;
             Init();
-         
+
         }
 
         public ObservableCollection<ProductDto> Products { get; set; }
@@ -85,7 +86,7 @@ namespace Main.ViewModels
         public string ClientName { get; set; }
 
         async void Init()
-        {            
+        {
             IsLoading = true;
             IsAutorized = userService.IsAutorized;
             ClientName = userService.CurrentUser?.Name;
@@ -126,24 +127,48 @@ namespace Main.ViewModels
             pageservice.ChangeNewPage<Pages.ClientPage>(DisappearAnimation.Default);
         });
 
+        public ObservableCollection<string> Categories { get; set; }
+
+        public int SelectedCategory 
+        { 
+            get => selectedCategory;
+            set 
+            {
+                if (value == selectedCategory) return;
+                selectedCategory = value;
+
+                string cat = value > 0 ? Categories[value] : null;
+
+                if (basketService.BasketCount > 0)
+                {
+                    Products = new ObservableCollection<ProductDto>(catalogService.GetProductsIncludeBasket(basketService.GetCatalog(cat), cat));
+                }
+                else
+                {
+
+                    Products = new ObservableCollection<ProductDto>(catalogService.GetProducts(cat));
+                }
+
+                OnPropertyChanged(nameof(SelectedCategory));
+            }
+
+        }
+
         async Task Reload()
         {
+
             string catalog = File.ReadAllLines(Rules.Static.FileName)[0];
 
             await catalogService.Reload(x => $"{catalog}\\{x}");
-            if (basketService.BasketCount > 0)
-            {
-                Products = new ObservableCollection<ProductDto>(catalogService.GetProductsIncludeBasketAsync(basketService.GetCatalog()));
-            }
-            else
-            {
 
-                Products = new ObservableCollection<ProductDto>(catalogService.GetProductsAsync());
-            }
+            Categories = new ObservableCollection<string>(catalogService.GetCategories());
+            Categories.Insert(0, "Все");
+            SelectedCategory = 0;
+            
+
             IsLoading = false;
             OnPropertyChanged(nameof(BasketCount));
         }
-
 
         public override int PoolIndex => Rules.Pages.MainPool;
     }

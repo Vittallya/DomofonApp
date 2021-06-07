@@ -34,6 +34,7 @@ namespace BL
 
             var list = await dbContext.
                 Products.
+                Where(x => x.StorageCount > 0).
                 AsNoTracking().
                 ToListAsync();
 
@@ -55,21 +56,24 @@ namespace BL
             return instance;
         }
 
-        public IEnumerable<ProductDto> GetProductsAsync(string name = null)
+        public IEnumerable<ProductDto> GetProducts(string cName = null)
         {
-            if(name != null)
-                return products.Where(x => x.Name == name);
+            if(cName != null)
+                return products.Where(x => x.Category == cName);
 
             return products;
         }
 
-        public IEnumerable<ProductDto> GetProductsIncludeBasketAsync(IEnumerable<ProductDto> dtos, string name = null)
+        public IEnumerable<ProductDto> GetProductsIncludeBasket(IEnumerable<ProductDto> dtos, string cName = null)
         {
-            var collection = (GetProductsAsync(name)).Except(dtos, new IdComparer()).OfType<ProductDto>();
+            var collection = (GetProducts(cName)).Except(dtos, new IdComparer()).OfType<ProductDto>();
             return collection.Union(dtos);
         }
 
-        
+        public IEnumerable<string> GetCategories()
+        {
+            return products.Select(x => x.Category).Distinct();
+        }
     }
 
     class IdComparer : IEqualityComparer<IDto>

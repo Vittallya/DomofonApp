@@ -12,6 +12,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -99,8 +100,110 @@
                     Content="Регистрация" Style="{DynamicResource LinkButton}"/>
         </StackPanel>
 
+        <Grid  Grid.Row="1" Grid.Column="1" Margin="0 10">
+            <ListView 
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedIndex="{Binding SelectedCategory}"
+                BorderBrush="Transparent"
+                SelectionMode="Single" ItemsSource="{Binding Categories}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Margin" Value="7 5"/>
+                        <Setter Property="BorderThickness" Value="3"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Padding" Value="5 1"/>
+
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border x:Name="border" 
+                                            CornerRadius="4"
+                                            Padding="{TemplateBinding Padding}"
+                                            Background="{TemplateBinding Background}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger 
+                                                 Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="LightBlue"/>
+                                            <Setter TargetName="border" 
+                                                    
+                                                    Property="BorderBrush">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="LightBlue" Opacity="0.7"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        
+                                        <Trigger 
+                                                 Property="IsSelected" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="Blue"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="Blue"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                
+                <!--<ItemsControl.ItemTemplate>
+                    <DataTemplate >
+                        <Grid Margin="10 0">
+                            <RadioButton 
+                                GroupName="Category"
+                                DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                Command="{Binding SelectCategory}"
+                                Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}">
+                                
+                                <RadioButton.Style>
+                                    <Style TargetType="RadioButton">
+                                        <Setter Property="FontSize" Value="15"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="RadioButton">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            
+                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                                        <ContentControl 
+                                                            Content="{TemplateBinding Content}"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+
+                                    </Style>
+                                </RadioButton.Style>
+                            </RadioButton>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>-->
+            </ListView>
+        </Grid>
+        
         <ScrollViewer
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="25 0"
             Grid.Column="1"
             Grid.ColumnSpan="2"

@@ -86,7 +86,14 @@ namespace BL
             // при редактировании ???
             _currentOrder.OrderedProducts = _orderedProducts.ToList();
 
-            
+
+            foreach(var op in _orderedProducts)
+            {
+                var p = await dbContext.Products.FindAsync(op.ProductId);
+                p.StorageCount -= op.Count;
+                dbContext.Entry(p).State = EntityState.Modified;
+            }
+
             if (!IsEdit)
             {
                 _currentOrder.CreationDate = DateTimeOffset.Now;

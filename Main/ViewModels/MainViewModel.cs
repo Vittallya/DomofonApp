@@ -101,19 +101,19 @@ namespace Main.ViewModels
 
         async void Init()
         {
-            //IsLoaded = true;
-            pipeHanlder.Init("DomofonApp");
-            pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
+            ////IsLoaded = true;
+            //pipeHanlder.Init("DomofonApp");
+            //pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
 
-            CheckFile();
+            //CheckFile();
 
             IsLoaded = await contextLoader.LoadAsync<Product>();
             IsLoadingAnimation = false;
 
             if (IsLoaded)
             {
-                pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
-                //pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
+                //pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
+                pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
             }
             else
             {

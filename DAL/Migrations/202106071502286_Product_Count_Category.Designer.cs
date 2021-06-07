@@ -7,13 +7,13 @@ namespace DAL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class fillDb : IMigrationMetadata
+    public sealed partial class Product_Count_Category : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(fillDb));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Product_Count_Category));
         
         string IMigrationMetadata.Id
         {
-            get { return "202104112002526_fillDb"; }
+            get { return "202106071502286_Product_Count_Category"; }
         }
         
         string IMigrationMetadata.Source
