@@ -22,14 +22,15 @@ namespace Main.ViewModels
     {
         private readonly AllDbContext dbContext;
         private readonly Validator validator;
+        private readonly OrderService orderService;
         private readonly FileBrowserService fileBrowser;
         private readonly MapperService mapper;
         private Window _window;
 
         public ObservableCollection<ProductDto> Products { get; set; }
         public ObservableCollection<CommonSale> Sales { get; set; }
-        public ObservableCollection<DAL.Models.Order> Orders { get; set; }
         public ObservableCollection<ServiceDto> Services { get; set; }
+        public ObservableCollection<OrderDto> Orders { get; set; }
 
         private ObjectViewModel<ProductDto> _productVm;
         private ObjectViewModel<CommonSale> _saleVm;
@@ -41,11 +42,13 @@ namespace Main.ViewModels
         public AdminViewModel(PageManager pageservice,
                               AllDbContext dbContext,
                               Validator validator,
+                              OrderService orderService,
                               FileBrowserService fileBrowser,
                               MapperService mapper) : base(pageservice)
         {
             this.dbContext = dbContext;
             this.validator = validator;
+            this.orderService = orderService;
             this.fileBrowser = fileBrowser;
             this.mapper = mapper;
             Init();
@@ -87,6 +90,19 @@ namespace Main.ViewModels
             var list = await dbContext.CommonSales.AsNoTracking().ToListAsync();
             Sales = new ObservableCollection<CommonSale>(list);
         }
+        public async Task ReloadOrders()
+        {
+            await dbContext.Orders.LoadAsync();
+            var list = await dbContext.Orders.ToListAsync();
+            Orders = new ObservableCollection<OrderDto>(list.Select(x => 
+                {
+                    var obj = mapper.MapTo<Order, OrderDto>(x);
+                    obj.ClientDto = mapper.MapTo<Client, ClientDto>( dbContext.Clients.Find(x.ClientId));
+                    return obj;
+                })
+            );
+
+        }
 
         private async void Init()
         {
@@ -97,7 +113,61 @@ namespace Main.ViewModels
             await ReloadProducts();
             await ReloadServices();
             await ReloadSales();
+            await ReloadOrders();
         }
+
+        #region Заказы
+
+        public ICommand ViewOrder => new CommandAsync(async x =>
+        {
+            if(x is OrderDto dto)
+            {
+                Item = dto;
+
+                var list = await orderService.GetOrderedProducts(dto.Id);
+
+                double sum = list.Sum(y => y.SaleCost);
+                double fullCost = list.Sum(y => y.Cost);
+                dto.CommonSale = fullCost - sum;
+
+                Param1 = list;
+                Param2 = await orderService.GetOrderedServices(dto.Id);
+
+                var win = new OrderDetailsWindow();
+                win.DataContext = this;
+                win.Title = $"Детали заказа №{dto.Id}";
+                win.ShowDialog();
+            }
+        });
+        public ICommand AcceptOrder => new CommandAsync(async x =>
+        {
+            if (x is OrderDto dto)
+            {
+                int index = Orders.IndexOf(dto);
+
+                var order = await dbContext.Orders.FindAsync(dto.Id);
+                order.OrderStatus = OrderStatus.Completed;
+                await dbContext.SaveChangesAsync();
+
+                Orders[index] = mapper.MapTo<Order, OrderDto>(order);
+            }
+        });
+        public ICommand CancelOrder => new CommandAsync(async x =>
+        {
+            if (x is OrderDto dto)
+            {
+                int index = Orders.IndexOf(dto);
+
+                var order = await dbContext.Orders.FindAsync(dto.Id);
+                order.OrderStatus = OrderStatus.CanceledByAdmin;
+
+                Orders[index] = mapper.MapTo<Order, OrderDto>(order);
+            }
+        });
+
+
+        #endregion
+
 
         #region Товар
         public ICommand AddProduct => new Command(x =>
@@ -106,10 +176,11 @@ namespace Main.ViewModels
             Product product = new Product();
             Item = product;
 
+            validator.ForProperty(() => product.Name, "Название").NotEmpty();
             validator.ForProperty(() => product.Cost, "Стоимость").MoreEqualThan(0);
             validator.ForProperty(() => product.Manufacturer, "Производитель").NotEmpty();
-            validator.ForProperty(() => product.Name, "Название").NotEmpty();
             validator.ForProperty(() => product.Category, "Категоря").NotEmpty("Категория должна быть выбрана");
+            validator.ForProperty(() => product.StorageCount, "Количество на складе").MoreEqualThan(0);
             IsEdit = false;
             Param2 = new ObservableCollection<Category>(dbContext.Categories);
 
@@ -139,9 +210,12 @@ namespace Main.ViewModels
                 Param1 = product.ImagePath;
                 Param2 = new ObservableCollection<Category>(dbContext.Categories);
 
+                validator.ForProperty(() => product.Name, "Название").NotEmpty();
                 validator.ForProperty(() => product.Cost, "Стоимость").MoreEqualThan(0);
                 validator.ForProperty(() => product.Manufacturer, "Производитель").NotEmpty();
-                validator.ForProperty(() => product.Name, "Название").NotEmpty();
+                validator.ForProperty(() => product.Category, "Категоря").NotEmpty("Категория должна быть выбрана");
+                validator.ForProperty(() => product.StorageCount, "Количество на складе").MoreEqualThan(0);
+
                 IsEdit = true;
 
                 _invoker = async () =>

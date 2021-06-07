@@ -1,0 +1,190 @@
+﻿<Window x:Class="Main.Windows.OrderDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Main.Windows"
+        mc:Ignorable="d"
+        Title="Детали" Height="450" Width="800">
+    <Grid Margin="25 10">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+
+            <StackPanel>
+
+                <TextBlock Style="{DynamicResource TextBlock_H2}">
+                    <Run Text="Дата заказа: "/>
+                    <Run FontWeight="Bold"
+                         Text="{Binding Item.CreationDate, StringFormat='dd.MM.yyyy'}"/>
+                    
+                </TextBlock>
+                
+                <TextBlock Margin="0 10" Style="{DynamicResource TextBlock_H2}">
+                    <Run Text="Время заказа: "/>
+                    <Run FontWeight="Bold"
+                         Text="{Binding Item.CreationDate, StringFormat='hh:mm'}"/>
+                    
+                </TextBlock>
+                
+                <TextBlock Style="{DynamicResource TextBlock_H2}">
+                    <Run Text="Общая стоимость заказа: "/>
+                    <Run FontWeight="Bold"
+                         Text="{Binding Item.FullCost, StringFormat= \{0:N\} р.}"/>
+                    
+                </TextBlock>
+
+                <TextBlock Margin="0 10" Style="{DynamicResource TextBlock_H2}">
+                    <Run Text="Общая оптовая скидка: "/>
+                    <Run FontWeight="Bold"
+                         Text="{Binding Item.CommonSale, StringFormat= \{0:N\} р.}"/>
+                    
+                </TextBlock>
+
+                <TextBlock Style="{DynamicResource TextBlock_H2}">
+                    <Run Text="Имя заказчика: "/>
+                    <Run FontWeight="Bold"
+                         Text="{Binding Item.ClientDto.Name}"/>
+                    
+                </TextBlock>
+
+                <TextBlock Margin="0 10" Style="{DynamicResource TextBlock_H2}">
+                    <Run Text="Номер телефона заказчика: "/>
+                    <Run FontWeight="Bold"
+                         Text="{Binding Item.ClientDto.Phone}"/>
+                    
+                </TextBlock>
+
+                <Expander  Margin="0 15">
+
+                    <Expander.Header>
+                        <TextBlock Text="Заказанные товары:" Style="{DynamicResource TextBlock_H2}"/>
+                    </Expander.Header>
+
+                    <ItemsControl ItemsSource="{Binding Param1}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+
+                                <Grid
+                                            Margin="0 7">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Ellipse Width="15"
+                                             VerticalAlignment="Center"
+                                             Height="15" Fill="Black"/>
+
+                                    <Border Background="White" 
+                                            BorderBrush="White" 
+                                            BorderThickness="4" 
+                                            Padding="25 5"
+                                            Grid.Column="1"
+                                            CornerRadius="3">
+
+                                        <StackPanel>
+                                            <TextBlock Style="{DynamicResource TextBlock_H3}" >
+                                        <Run  Text="Код товара:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding ProductDto.Id}"/>
+                                            </TextBlock>
+
+                                            <TextBlock Margin="0 4" Style="{DynamicResource TextBlock_H3}" >
+                                        <Run Text="Наименование товара:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding ProductDto.Name}"/>
+                                            </TextBlock>
+
+                                            <TextBlock Style="{DynamicResource TextBlock_H3}" >
+                                        <Run Text="Количество товаров:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding Count}"/>
+                                            </TextBlock>
+
+                                            <TextBlock Margin="0 4" Style="{DynamicResource TextBlock_H3}" >
+                                        <Run Text="Стоимость:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding Cost, Mode=OneWay, StringFormat=\{0:N\} р.}"/>
+                                            </TextBlock>
+                                            
+                                            <TextBlock Margin="0 4" Style="{DynamicResource TextBlock_H3}" >
+                                        <Run Text="Скидка:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding CommonSale, Mode=OneWay, StringFormat=\{0:N\}%}"/>
+                                            </TextBlock>
+                                            
+                                            <TextBlock Margin="0 4" Style="{DynamicResource TextBlock_H3}" >
+                                        <Run Text="Стоиомость со скидкой:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding SaleCost, Mode=OneWay, StringFormat=\{0:N\} Р.}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Expander>
+                <Expander >
+                    <Expander.Header>
+
+                        <TextBlock Margin="0 25 0 0" Text="Заказанные услуги:" Style="{DynamicResource TextBlock_H2}"/>
+                    </Expander.Header>
+                    <ItemsControl ItemsSource="{Binding Param2}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Ellipse Width="15"
+                                             VerticalAlignment="Center"
+                                             Height="15" Fill="Black"/>
+
+                                    <Border Background="White" 
+                                            Grid.Column="1"
+                                    BorderBrush="White" 
+                                    BorderThickness="4" 
+                                    Padding="25 5"
+                                    Margin="0 7"
+                                    CornerRadius="3">
+
+                                        <StackPanel>
+                                            <TextBlock Style="{DynamicResource TextBlock_H3}" >
+                                        <Run  Text="Номер услуги:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding Id}"/>
+                                            </TextBlock>
+
+                                            <TextBlock Margin="0 7 0 0" Style="{DynamicResource TextBlock_H3}" >
+                                        <Run Text="Наименование услуги:"/>
+                                        <Run FontWeight="DemiBold" Text="{Binding Name}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                                
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Expander>
+                
+            </StackPanel>
+        </ScrollViewer>
+
+        <Rectangle Fill="White" Grid.Row="1"/>
+
+        <Button Grid.Row="1" Padding="75 5" 
+                FontSize="15"
+                Click="Button_Click"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center" Content="Ок"/>
+    </Grid>
+</Window>

@@ -168,7 +168,7 @@ namespace BL
         public async Task<IEnumerable<OrderedProductDto>> GetOrderedProducts(int orderId)
         {
             await dbContext.OrderedProducts.LoadAsync();
-
+            await dbContext.CommonSales.LoadAsync();
             var order = await dbContext.Orders.FindAsync(orderId);
 
             var list = await dbContext.
@@ -177,10 +177,19 @@ namespace BL
                 Where(x => x.OrderId == orderId).
                 ToListAsync();
 
+
             return list.Select(y =>
             {
-                var inst = mapper.MapTo<OrderedProduct, OrderedProductDto>(y);
+
+                var sales = dbContext.CommonSales.Where(x => x.ProductId == y.ProductId).ToList();
+
+                var inst = mapper.MapTo<OrderedProduct, OrderedProductDto>(y);                
                 inst.ProductDto = mapper.MapTo<Product, ProductDto>(y.Product);
+                inst.CommonSale = sales.
+                    Where(x => x.StartCount <= inst.Count).
+                    OrderByDescending(x => x.SaleValue).
+                    FirstOrDefault()?.SaleValue ?? 0;
+
                 return inst;
             });
         }

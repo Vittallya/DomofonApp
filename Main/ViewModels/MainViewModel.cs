@@ -105,7 +105,7 @@ namespace Main.ViewModels
             //pipeHanlder.Init("DomofonApp");
             //pipeHanlder.UpdateCalled += PipeHanlder_UpdateCalled;
 
-            //CheckFile();
+            CheckFile();
 
             IsLoaded = await contextLoader.LoadAsync<Product>();
             IsLoadingAnimation = false;

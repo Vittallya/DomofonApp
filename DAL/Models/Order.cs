@@ -8,7 +8,7 @@ namespace DAL.Models
 {
     public enum OrderStatus
     {
-        Active, Completed, Canceled
+        Active, Completed, Canceled, CanceledByAdmin
     }
 
     public class Order

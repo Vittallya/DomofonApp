@@ -18,7 +18,8 @@
     <BitmapImage x:Key="edit" UriSource="Images/edit.png"/>
     <BitmapImage x:Key="remove" UriSource="Images/remove.png"/>
     <BitmapImage x:Key="user" UriSource="Images/user.png"/>
-
+    <BitmapImage x:Key="details" UriSource="Images/details.png"/>
+    <BitmapImage x:Key="accept" UriSource="Images/ok.png"/>
     <Grid x:Key="Plus1">
         <Border HorizontalAlignment="Center" 
                 VerticalAlignment="Center"

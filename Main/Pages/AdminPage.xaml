@@ -313,7 +313,7 @@
 
                                                     <TextBlock Margin="0 5" 
                                                                Style="{DynamicResource TextBlock_H3}" >
-                                                        <Run Text="Начальное количество товаров::"/>
+                                                        <Run Text="Начальное количество товаров:"/>
                                                         <Run
                                                             FontWeight="Bold"
                                                             Text="{Binding StartCount, 
@@ -371,6 +371,136 @@
 
                         <Image Height="50" Source="{DynamicResource add}"/>
                     </Button>
+                </Grid>
+                
+            </TabItem>
+            <TabItem
+                
+                FontSize="15" Header="Заказы">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="75"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer>
+
+                        <StackPanel>
+
+                            <ListBox 
+                            BorderBrush="Transparent"
+                         ItemsSource="{Binding Orders, UpdateSourceTrigger=PropertyChanged}">
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="650"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <DockPanel HorizontalAlignment="Left"   Margin="25 0">
+
+                                                <StackPanel>
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Номер заказа:"/>
+                                                        <Run
+                                                            FontWeight="Bold"
+                                                            Text="{Binding Id}"/>
+                                                    </TextBlock>
+
+
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Дата заказа:"/>
+                                                        <Run
+                                                            FontWeight="Bold"
+                                                            Text="{Binding CreationDate, 
+                                                        StringFormat='dd.MM.yyyy hh:mm',
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </TextBlock>
+
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Общая стоимость:"/>
+                                                        <Run
+                                                            FontWeight="Bold"
+                                                            Text="{Binding FullCost, StringFormat=\{0:N\} р.}"/>
+                                                    </TextBlock>
+
+                                                    <TextBlock Margin="0 5" 
+                                                               Style="{DynamicResource TextBlock_H3}" >
+                                                        <Run Text="Статус заказа:"/>
+                                                        <Run
+                                                            FontWeight="Bold"
+                                                            FontSize="18"
+                                                            Text="{Binding StatusStr, Mode=OneWay}"/>
+                                                    </TextBlock>
+
+                                                </StackPanel>
+                                            </DockPanel>
+
+
+                                            <StackPanel HorizontalAlignment="Center" 
+                                                        VerticalAlignment="Center"
+                                                        Grid.Column="1"
+                                                        Orientation="Horizontal">
+
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding ViewOrder}"
+                                                    Padding="15 3"
+                                                    Style="{DynamicResource ButtonEmpty}">
+
+                                                    <Image Height="45" Source="{DynamicResource details}"/>
+                                                </Button>
+
+
+                                                <StackPanel
+                                                    Margin="15 0" 
+                                                    Visibility="{Binding IsActive, 
+                                                    Mode=OneWay, 
+                                                    Converter={StaticResource BoolToVis}}">
+                                                <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding AcceptOrder}"
+                                                    Padding="15 3"
+                                                    Style="{DynamicResource ButtonEmpty}">
+
+                                                    <Image Height="45" Source="{DynamicResource accept}"/>
+                                                </Button>
+                                                </StackPanel>
+
+                                                <StackPanel 
+                                                    Margin="15 0" 
+                                                    Visibility="{Binding IsActive, 
+                                                    Mode=OneWay, 
+                                                    Converter={StaticResource BoolToVis}}">
+                                                    <Button 
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=DataContext}"
+                                                    Command="{Binding CancelOrder}"
+                                                    Padding="15 3"
+                                                    Style="{DynamicResource ButtonEmpty}">
+
+                                                        <Image Height="35" Source="{DynamicResource Close}"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+
+                            </ListBox>
+
+                        </StackPanel>
+
+                    </ScrollViewer>
                 </Grid>
                 
             </TabItem>
