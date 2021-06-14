@@ -12,6 +12,7 @@ using DAL.Models;
 using System.IO;
 using System.Text;
 using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace Main.ViewModels
 {
@@ -47,7 +48,7 @@ namespace Main.ViewModels
             Init();
         }
 
-        public string LoadingText { get; set; } = "Загрузка бд...";
+        public string LoadingText { get; set; } = "Загрузка приложения";
 
 
         void CheckFile()
@@ -59,43 +60,60 @@ namespace Main.ViewModels
 
             string path = File.ReadAllLines(Rules.Static.FileName)[0];
 
-            if (!Directory.Exists(path))
+            var imgs = new BitmapImage[]
+            {
+                App.Current.MainWindow.FindResource("1") as BitmapImage,
+                App.Current.MainWindow.FindResource("2") as BitmapImage,
+                App.Current.MainWindow.FindResource("3") as BitmapImage,
+                App.Current.MainWindow.FindResource("4") as BitmapImage,
+                App.Current.MainWindow.FindResource("5") as BitmapImage,
+                App.Current.MainWindow.FindResource("6") as BitmapImage,
+            };
+
+            if (Directory.Exists(path))
+            {
+                string[]  files = Directory.EnumerateFiles(path)
+                    .Select(f => Path.GetFileName(f)).
+                    ToArray();
+
+                if (!imgs.All(y => files.Contains(Path.GetFileName(y.UriSource.OriginalString))))
+                {
+                    CopyImages(path, imgs.
+                        Where(x => !files.Contains(Path.GetFileName(x.UriSource.OriginalString))).
+                        ToArray());
+                }
+            }
+            else
             {
                 Directory.CreateDirectory(path);
-                var imgs = new BitmapImage[]
+                CopyImages(path, imgs);
+            }
+        }
+
+        private void CopyImages(string path, BitmapImage[] imgs)
+        {
+            foreach (BitmapImage image in imgs)
+            {
+                string name = Path.GetFileName(image.UriSource.OriginalString);
+
+                using (FileStream fs = new FileStream(Path.Combine(path, name), FileMode.CreateNew, FileAccess.Write))
                 {
-                    App.Current.MainWindow.FindResource("1") as BitmapImage,
-                    App.Current.MainWindow.FindResource("2") as BitmapImage,
-                    App.Current.MainWindow.FindResource("3") as BitmapImage,
-                    App.Current.MainWindow.FindResource("4") as BitmapImage,
-                    App.Current.MainWindow.FindResource("5") as BitmapImage,
-                    App.Current.MainWindow.FindResource("6") as BitmapImage,
-                };
+                    BitmapEncoder encoder = new PngBitmapEncoder();
+
+                    string ext = Path.GetExtension(name);
 
 
-                foreach(BitmapImage image in imgs)
-                {
-                    string name = Path.GetFileName(image.UriSource.OriginalString);
-
-                    using(FileStream fs = new FileStream(Path.Combine(path, name), FileMode.CreateNew, FileAccess.Write))
+                    switch (ext)
                     {
-                        BitmapEncoder encoder = new PngBitmapEncoder();
-
-                        string ext = Path.GetExtension(name);
-
-
-                        switch (ext)
-                        {
-                            case "jpeg": encoder = new JpegBitmapEncoder(); break;
-                            case "jpg": encoder = new JpegBitmapEncoder(); break;
-                            case "bmp": encoder = new BmpBitmapEncoder(); break;
-                        }
-
-                        encoder.Frames.Add(BitmapFrame.Create(image));
-                        encoder.Save(fs);
+                        case "jpeg": encoder = new JpegBitmapEncoder(); break;
+                        case "jpg": encoder = new JpegBitmapEncoder(); break;
+                        case "bmp": encoder = new BmpBitmapEncoder(); break;
                     }
 
+                    encoder.Frames.Add(BitmapFrame.Create(image));
+                    encoder.Save(fs);
                 }
+
             }
         }
 
@@ -112,8 +130,8 @@ namespace Main.ViewModels
 
             if (IsLoaded)
             {
-                //pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
-                pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
+                pageService.ChangeNewPage<Pages.CatalogPage>(defaultAnim);
+                //pageService.ChangeNewPage<Pages.AdminPage>(defaultAnim);
             }
             else
             {

@@ -14,9 +14,11 @@ namespace MVVM_Core
 
         protected virtual ISliderAnimation defaultAnim { get; } = DisappearAnimation.Default;
 
+        protected virtual void OnPageChanged(Page page, ISliderAnimation sliderAnimation) { }
+
         protected async void PageService_PageChanged(Page page, ISliderAnimation animation)
         {
-
+            OnPageChanged(page, animation);
             ISliderAnimation anim = animation ?? defaultAnim;
 
             if (CurrentPage != null)
@@ -28,6 +30,7 @@ namespace MVVM_Core
             CurrentPage = page;
 
             await anim.AnimateNewPage(CurrentPage.Content as UIElement);
+
         }
     }
 }

@@ -9,33 +9,53 @@ namespace MVVM_Core
 {
     public abstract class BasePageViewModel: BaseViewModel
     {
-        protected readonly PageService pageservice;
+        protected readonly PageManager pageservice;
 
-        public abstract int PoolIndex { get; }
+        public virtual int PoolIndex { get; }
 
         protected virtual ISliderAnimation BackSlideAnim => DisappearAnimation.Default;
 
-        protected virtual void Back()
+        protected virtual void Back(object param)
         {
-            pageservice.Back(PoolIndex, BackSlideAnim);
+            pageservice.Back(BackSlideAnim);
         }
 
-        protected virtual void Next()
+        protected virtual void Next(object param)
         {
+            pageservice.Next();
+        }
 
+        protected virtual async Task BackAsync(object param)
+        {
+            pageservice.Back(BackSlideAnim);
+        }
+
+        protected virtual async Task NextAsync(object param)
+        {
+            pageservice.Next();
         }
 
         public ICommand BackCommand => new Command(x =>
         {
-            Back();
+            Back(x);
         });
 
         public ICommand NextCommand => new Command(x =>
         {
-            Next();
+            Next(x);
         });
 
-        public BasePageViewModel(PageService pageservice)
+        public ICommand BackCommandAsync => new CommandAsync(async x =>
+        {
+            await BackAsync(x);
+        });
+
+        public ICommand NextCommandAsync => new CommandAsync(async x =>
+        {
+            await NextAsync(x);
+        });
+
+        public BasePageViewModel(PageManager pageservice)
         {
             this.pageservice = pageservice;
         }

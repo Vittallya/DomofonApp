@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Activation;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace MVVM_Core
@@ -32,11 +34,11 @@ namespace MVVM_Core
             TPage page = null;
 
             bool isExist = false;
-            bool other = poolIndex != ActualPool;
+            bool isOtherPool = poolIndex != ActualPool;
             bool poolContains = _pool.ContainsKey(poolIndex);
             bool hasSame = poolContains && _pool[poolIndex].Any(x => x.GetType() == typeof(TPage));
 
-            if (other)
+            if (isOtherPool)
             {
                 ActualPool = poolIndex;
 
@@ -47,30 +49,83 @@ namespace MVVM_Core
                 }
             }
 
-            if (!_poolHistory.Contains(poolIndex))
-                _poolHistory.Add(poolIndex);
-
-
             if (!isExist)
             {
                 page = new TPage();
-                if (!poolContains)
-                {
-                    _pool.Add(poolIndex, new List<Page>());
-                }
-                _pool[poolIndex].Add(page);
-
+                AddToHistory(page, poolIndex);
             }
 
             return page;
         }
 
-        private Action<int> nextInvoker;
+        private void AddToHistory<TPage>(TPage page, int poolIndex) where TPage : Page, new()
+        {
+            if (!_poolHistory.Contains(poolIndex))
+                _poolHistory.Add(poolIndex);
+
+            if (!_pool.ContainsKey(poolIndex))
+            {
+                _pool.Add(poolIndex, new List<Page>());
+            }
+            _pool[poolIndex].Add(page);
+
+        }
 
         public void OnChangePage<TPage>(TPage target, ISliderAnimation anim) where TPage : Page, new()
         {
             PageChanged?.Invoke(target, anim);
         }
+
+        private Action _nextInvokerDef;
+
+        private Dictionary<int, Action> invokers = new Dictionary<int, Action>();
+
+        public void SetupNext<TPage>(int poolIndex, ISliderAnimation animation) where TPage : Page, new()
+        {
+            _nextInvokerDef = () => ChangePage<TPage>(poolIndex, animation);            
+        }
+
+        public void ReloadCurrentPage(int pool, ISliderAnimation animation)
+        {
+            var page = Activator.CreateInstance(
+                _pool[pool].LastOrDefault().GetType()) as Page;
+            _pool[pool][_pool[pool].Count - 1] = page;
+            OnChangePage(page, animation);
+
+        }
+
+
+        //public void SetupNextCurrent(int poolIndex, ISliderAnimation animation) 
+        //{
+        //    var page = _pool[ActualPool].LastOrDefault();
+        //    _nextInvokerDef = () =>
+        //    {                              
+        //        AddToHistory(page, poolIndex);
+        //        OnChangePage(page, animation);
+        //    };
+        //}
+        public void SetupNextCurrent(int pool, ISliderAnimation animation, bool needReload) 
+        {
+            _nextInvokerDef = () =>
+            {
+                ChangeToLastByPool(pool, animation, needReload);
+            };            
+        }
+
+        public void SetupNext<TPage>(ISliderAnimation animation) where TPage : Page, new()
+        {
+            _nextInvokerDef = () => ChangePage<TPage>(animation);
+        }
+
+        public void Next()
+        {
+            if (_nextInvokerDef != null)
+                _nextInvokerDef.Invoke();
+            else
+                Back(ActualPool);
+        }
+
+
 
         #region ByType
         
@@ -127,16 +182,6 @@ namespace MVVM_Core
         }
         #endregion
 
-        public void SetupNext<TPage>(ISliderAnimation animation) where TPage : Page, new()
-        {
-            nextInvoker = pool => ChangePage<TPage>(pool, animation);
-        }
-
-        public void Next(int pool)
-        {
-            nextInvoker?.Invoke(pool);
-        }
-
 
         List<Page> _history = new List<Page>();
 
@@ -145,6 +190,7 @@ namespace MVVM_Core
         public int ActualPool { get; private set; } = -1;
 
         Dictionary<int, List<Page>> _pool = new Dictionary<int, List<Page>>();
+
 
         public void Back(int poolIndex, ISliderAnimation anim = null)
         {
@@ -189,18 +235,37 @@ namespace MVVM_Core
 
         }
 
-        public void ChangeToLastByPool(int index, ISliderAnimation animation = null)
+        public void ClearNext()
+        {
+            _nextInvokerDef = null;
+        }
+
+        public bool IsNextContains => _nextInvokerDef != null;
+
+        public void ChangeToLastByPool(int index, ISliderAnimation animation = null, bool needReload = false)
         {
             if (_pool.ContainsKey(index) && _pool[index].Count > 0)
             {
                 var target = _pool[index].Last();
+
+                if (needReload)
+                {
+                    target = Activator.CreateInstance(target.GetType()) as Page;
+                    _pool[index][_pool[index].Count - 1] = target;
+                }
                 OnChangePage(target, animation);
             }
         }
 
-        public void ChangeToLastByActualPool(ISliderAnimation animation = null)
+        public void ChangeToLastByActualPool(ISliderAnimation animation = null, bool needReload = false)
         {            
             var target = _pool[ActualPool].Last();
+
+            if (needReload)
+            {
+                target = Activator.CreateInstance(target.GetType()) as Page;
+                _pool[ActualPool][_pool[ActualPool].Count - 1] = target;
+            }
             OnChangePage(target, animation);            
         }
 

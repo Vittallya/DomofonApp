@@ -37,12 +37,7 @@ namespace MVVM_Core
         {
             var same = subscribers.Keys.FirstOrDefault(x => x.MesType == typeof(T) && x.Sub == typeof(TSub));
 
-            if (same == null)
-            {
-                return;
-            }
-
-            same.Dispose();
+            same?.Dispose();
         }
 
         public async Task Publish<T>(T message) where T: IEvent
@@ -56,14 +51,12 @@ namespace MVVM_Core
 
             await Task.WhenAll(tasks);
 
+            subs.
+                Select(x => x.Key).
+                Where(x => x.IsOnce).
+                ToList().
+                ForEach(x => x.Dispose());
 
-            foreach(var sub in subs.Select(x => x.Key))
-            {
-                if (sub.IsOnce)
-                {
-                    sub.Dispose();
-                }
-            }
         }
     }
 }
